@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Simple.DatabaseWrapper</name>
+    </assembly>
+    <members>
+        <member name="T:Simple.DatabaseWrapper.Attributes.AllowNullAttribute">
+            <summary>
+            Specify that this column should allow nulls
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.DefaultValueAttribute">
+            <summary>
+            Specify default value for this column
+            </summary>
+        </member>
+        <member name="P:Simple.DatabaseWrapper.Attributes.DefaultValueAttribute.DefaultValue">
+            <summary>
+            Default value specified
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Attributes.DefaultValueAttribute.#ctor(System.Object)">
+            <summary>
+            Creates a new instance
+            </summary>
+            <param name="defaultValue"></param>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.NotNullAttribute">
+            <summary>
+            Specify that this column should not allow nulls
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.PrimaryKeyAttribute">
+            <summary>
+            Specify that this column is PrimaryKey
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.UniqueAttribute">
+            <summary>
+            Specify that this column should only have unique values
+            </summary>
+        </member>
+    </members>
+</doc>
