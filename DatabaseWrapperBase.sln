@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.DatabaseWrapper", "Simple.DatabaseWrapper\Simple.DatabaseWrapper.csproj", "{7B9C5B23-75FC-4046-8843-A5A6A0E5610D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.DatabaseWrapper.Tests", "Simple.DatabaseWrapper.Tests\Simple.DatabaseWrapper.Tests.csproj", "{EC6AC700-799B-4568-AC46-7A1F288383F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B9C5B23-75FC-4046-8843-A5A6A0E5610D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9C5B23-75FC-4046-8843-A5A6A0E5610D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9C5B23-75FC-4046-8843-A5A6A0E5610D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9C5B23-75FC-4046-8843-A5A6A0E5610D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC6AC700-799B-4568-AC46-7A1F288383F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC6AC700-799B-4568-AC46-7A1F288383F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC6AC700-799B-4568-AC46-7A1F288383F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC6AC700-799B-4568-AC46-7A1F288383F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3BD32D1-A5E4-481E-94CF-8748144E4CD6}
+	EndGlobalSection
+EndGlobal
