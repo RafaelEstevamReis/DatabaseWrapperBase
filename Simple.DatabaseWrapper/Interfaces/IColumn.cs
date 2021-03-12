@@ -13,5 +13,6 @@ namespace Simple.DatabaseWrapper.Interfaces
         object DefaultValue { get; }
 
         string ExportColumnDefinitionAsStatement();
+        string ExportAddColumnAsStatement();
     }
 }
