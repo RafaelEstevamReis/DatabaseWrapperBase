@@ -26,7 +26,7 @@ namespace Simple.DatabaseWrapper.Helpers
         public ItemType ItemType { get; set; }
         public string Name { get; set; }
         public Type Type { get; set; }
-        public (ColumnAttributes, Attribute)[] DBAttributes { get; set; }
+        public AttributeInfo[] DBAttributes { get; set; }
 
         public static TypeItemInfo[] FromType(Type type)
         {
@@ -59,36 +59,47 @@ namespace Simple.DatabaseWrapper.Helpers
                 DBAttributes = getAttributes(p.GetCustomAttributes()).ToArray(),
             };
         }
-        private static IEnumerable<(ColumnAttributes, Attribute)> getAttributes(IEnumerable<Attribute> attributes)
+        private static IEnumerable<AttributeInfo> getAttributes(IEnumerable<Attribute> attributes)
         {
             foreach (var att in attributes)
             {
                 if (att is AllowNullAttribute)
                 {
-                    yield return (ColumnAttributes.AllowNull, att);
+                    yield return new AttributeInfo(ColumnAttributes.AllowNull, att);
                 }
                 else if (att is NotNullAttribute)
                 {
-                    yield return (ColumnAttributes.NotNull, att);
+                    yield return new AttributeInfo(ColumnAttributes.NotNull, att);
                 }
                 else if (att is DefaultValueAttribute)
                 {
-                    yield return (ColumnAttributes.DefaultValue, att);
+                    yield return new AttributeInfo(ColumnAttributes.DefaultValue, att);
                 }
                 else if (att is PrimaryKeyAttribute)
                 {
-                    yield return (ColumnAttributes.PrimaryKey, att);
+                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
                 }
                 else if (att is System.ComponentModel.DataAnnotations.KeyAttribute)
                 {
-                    yield return (ColumnAttributes.PrimaryKey, att);
+                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
                 }
                 else if (att is UniqueAttribute)
                 {
-                    yield return (ColumnAttributes.Unique, att);
+                    yield return new AttributeInfo(ColumnAttributes.Unique, att);
                 }
             }
         }
 
+    }
+    public class AttributeInfo
+    {
+        public AttributeInfo(ColumnAttributes columnAttributes, Attribute attribute)
+        {
+            ColumnAttributes = columnAttributes;
+            Attribute = attribute;
+        }
+
+        public ColumnAttributes  ColumnAttributes { get; set; }
+        public Attribute Attribute { get; set; }
     }
 }
