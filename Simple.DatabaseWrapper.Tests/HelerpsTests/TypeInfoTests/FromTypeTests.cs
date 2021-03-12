@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Simple.DatabaseWrapper.Attributes;
-using Simple.DatabaseWrapper.Helpers;
+using Simple.DatabaseWrapper.TypeReader;
 using Xunit;
 
 namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
@@ -10,7 +10,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_BasicTestsT()
         {
-            var tr = TypeReader.FromType<TestClassProps>();
+            var tr = TypeInfo.FromType<TestClassProps>();
 
             Assert.Equal("TestClassProps", tr.TypeName);
             Assert.Equal(8, tr.Items.Length);
@@ -18,7 +18,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_BasicTestsType()
         {
-            var tr = TypeReader.FromType(typeof(TestClassProps));
+            var tr = TypeInfo.FromType(typeof(TestClassProps));
 
             Assert.Equal("TestClassProps", tr.TypeName);
             Assert.Equal(8, tr.Items.Length);
@@ -27,7 +27,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_BasicTestsDecimal()
         {
-            var tr = TypeReader.FromType<decimal>();
+            var tr = TypeInfo.FromType<decimal>();
 
             Assert.Equal("Decimal", tr.TypeName);
             Assert.Equal(5, tr.Items.Length);
@@ -36,14 +36,14 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_ClassProps()
         {
-            var tr = TypeReader.FromType<TestClassProps>();
+            var tr = TypeInfo.FromType<TestClassProps>();
             Assert.Equal("TestClassProps", tr.TypeName);
             checkItems(tr.Items, ItemType.Property);
         }
         [Fact]
         public void FromType_StructProps()
         {
-            var tr = TypeReader.FromType<TestStructProps>();
+            var tr = TypeInfo.FromType<TestStructProps>();
             Assert.Equal("TestStructProps", tr.TypeName);
             checkItems(tr.Items, ItemType.Property);
         }
@@ -51,14 +51,14 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_ClassFields()
         {
-            var tr = TypeReader.FromType<TestClassFields>();
+            var tr = TypeInfo.FromType<TestClassFields>();
             Assert.Equal("TestClassFields", tr.TypeName);
             checkItems(tr.Items, ItemType.Field);
         }
         [Fact]
         public void FromType_StructFields()
         {
-            var tr = TypeReader.FromType<TestStructFields>();
+            var tr = TypeInfo.FromType<TestStructFields>();
             Assert.Equal("TestStructFields", tr.TypeName);
             checkItems(tr.Items, ItemType.Field);
         }
@@ -90,7 +90,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_AttributesCheck()
         {
-            var tr = TypeReader.FromType<TestAttributes>();
+            var tr = TypeInfo.FromType<TestAttributes>();
             Assert.Equal("TestAttributes", tr.TypeName);
 
             Assert.Equal(6, tr.Items.Length);
@@ -125,7 +125,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
         [Fact]
         public void FromType_MyAttributesCheck()
         {
-            var tr = TypeReader.FromType<TestMyAttributes>();
+            var tr = TypeInfo.FromType<TestMyAttributes>();
             Assert.Equal("TestMyAttributes", tr.TypeName);
 
             Assert.Equal(5, tr.Items.Length);

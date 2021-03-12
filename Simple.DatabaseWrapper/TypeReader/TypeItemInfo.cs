@@ -4,23 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Simple.DatabaseWrapper.Attributes;
 
-namespace Simple.DatabaseWrapper.Helpers
+namespace Simple.DatabaseWrapper.TypeReader
 {
-    public class TypeReader
-    {
-        public string TypeName { get; set; }
-        public TypeItemInfo[] Items { get; set; }
-
-        public static TypeReader FromType<T>() => FromType(typeof(T));
-        public static TypeReader FromType(Type type)
-        {
-            return new TypeReader()
-            {
-                 TypeName = type.Name,
-                 Items = TypeItemInfo.FromType(type)
-            };
-        }
-    }
     public class TypeItemInfo
     {
         public ItemType ItemType { get; set; }
@@ -29,6 +14,20 @@ namespace Simple.DatabaseWrapper.Helpers
         public AttributeInfo[] DBAttributes { get; set; }
 
         public bool Is(ColumnAttributes attribute) => DBAttributes.Any(o => o.ColumnAttributes == attribute);
+        public bool HasDefaultValue(out object DefaultValue)
+        {
+            foreach (var attr in DBAttributes)
+            {
+                if (attr.Attribute is DefaultValueAttribute def)
+                {
+                    DefaultValue = def;
+                    return true;
+                }
+            }
+
+            DefaultValue = null;
+            return false;
+        }
 
         public static TypeItemInfo[] FromType(Type type)
         {
@@ -98,23 +97,6 @@ namespace Simple.DatabaseWrapper.Helpers
         public override string ToString()
         {
             return $"[{(ItemType == ItemType.Property ? 'P' : 'F')}] {Type.Name} {Name}";
-        }
-    }
-    public class AttributeInfo
-    {
-        public AttributeInfo(ColumnAttributes columnAttributes, Attribute attribute)
-        {
-            ColumnAttributes = columnAttributes;
-            Attribute = attribute;
-        }
-
-        public ColumnAttributes  ColumnAttributes { get; set; }
-        public Attribute Attribute { get; set; }
-
-        public override string ToString()
-        {
-            if (Attribute is DefaultValueAttribute def) return $"DefaultValue({def.DefaultValue})";
-            return ColumnAttributes.ToString();
         }
     }
 }
