@@ -28,6 +28,8 @@ namespace Simple.DatabaseWrapper.Helpers
         public Type Type { get; set; }
         public AttributeInfo[] DBAttributes { get; set; }
 
+        public bool Is(ColumnAttributes attribute) => DBAttributes.Any(o => o.ColumnAttributes == attribute);
+
         public static TypeItemInfo[] FromType(Type type)
         {
             var fields = type.GetFields()
@@ -63,7 +65,17 @@ namespace Simple.DatabaseWrapper.Helpers
         {
             foreach (var att in attributes)
             {
-                if (att is AllowNullAttribute)
+                // Keys
+                if (att is PrimaryKeyAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
+                }
+                else if (att is System.ComponentModel.DataAnnotations.KeyAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
+                }
+                // Nulls
+                else if (att is AllowNullAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.AllowNull, att);
                 }
@@ -71,17 +83,10 @@ namespace Simple.DatabaseWrapper.Helpers
                 {
                     yield return new AttributeInfo(ColumnAttributes.NotNull, att);
                 }
+                // Others
                 else if (att is DefaultValueAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.DefaultValue, att);
-                }
-                else if (att is PrimaryKeyAttribute)
-                {
-                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
-                }
-                else if (att is System.ComponentModel.DataAnnotations.KeyAttribute)
-                {
-                    yield return new AttributeInfo(ColumnAttributes.PrimaryKey, att);
                 }
                 else if (att is UniqueAttribute)
                 {
@@ -90,6 +95,10 @@ namespace Simple.DatabaseWrapper.Helpers
             }
         }
 
+        public override string ToString()
+        {
+            return $"[{(ItemType == ItemType.Property ? 'P' : 'F')}] {Type.Name} {Name}";
+        }
     }
     public class AttributeInfo
     {
@@ -101,5 +110,11 @@ namespace Simple.DatabaseWrapper.Helpers
 
         public ColumnAttributes  ColumnAttributes { get; set; }
         public Attribute Attribute { get; set; }
+
+        public override string ToString()
+        {
+            if (Attribute is DefaultValueAttribute def) return $"DefaultValue({def.DefaultValue})";
+            return ColumnAttributes.ToString();
+        }
     }
 }
