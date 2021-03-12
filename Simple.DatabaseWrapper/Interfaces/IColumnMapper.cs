@@ -2,7 +2,7 @@
 
 namespace Simple.DatabaseWrapper.Interfaces
 {
-    public interface IColumnMapper
+    public interface IColumnMapper : ITableMapper
     {
         ITableMapper ConfigureTable(Action<ITable> Options);
     }

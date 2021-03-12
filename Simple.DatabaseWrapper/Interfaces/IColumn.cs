@@ -12,6 +12,6 @@ namespace Simple.DatabaseWrapper.Interfaces
         bool AllowNulls { get; }
         object DefaultValue { get; }
 
-        string ExportAddColumnAsStatement();
+        string ExportColumnDefinitionAsStatement();
     }
 }
