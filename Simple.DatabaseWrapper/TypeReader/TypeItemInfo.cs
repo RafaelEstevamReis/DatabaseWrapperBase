@@ -8,10 +8,15 @@ namespace Simple.DatabaseWrapper.TypeReader
 {
     public class TypeItemInfo
     {
-        public ItemType ItemType { get; set; }
-        public string Name { get; set; }
-        public Type Type { get; set; }
-        public AttributeInfo[] DBAttributes { get; set; }
+        private TypeItemInfo() { }
+
+        private FieldInfo fieldInfo;
+        private PropertyInfo propertyInfo;
+
+        public ItemType ItemType { get; private set; }
+        public string Name { get; private set; }
+        public Type Type { get; private set; }
+        public AttributeInfo[] DBAttributes { get; private set; }
 
         public bool Is(ColumnAttributes attribute) => DBAttributes.Any(o => o.ColumnAttributes == attribute);
         public bool HasDefaultValue(out object DefaultValue)
@@ -27,6 +32,17 @@ namespace Simple.DatabaseWrapper.TypeReader
 
             DefaultValue = null;
             return false;
+        }
+
+        public object GetValue(object Object)
+        {
+            if (fieldInfo != null) return fieldInfo.GetValue(Object);
+            return propertyInfo.GetValue(Object);
+        }
+        public void SetValue(object Object, object Value)
+        {
+            if (fieldInfo != null) fieldInfo.SetValue(Object, Value);
+            else propertyInfo.SetValue(Object, Value);
         }
 
         public static TypeItemInfo[] FromType(Type type)
@@ -45,6 +61,9 @@ namespace Simple.DatabaseWrapper.TypeReader
             return new TypeItemInfo()
             {
                 ItemType = ItemType.Field,
+                fieldInfo = f,
+                propertyInfo = null,
+
                 Type = f.FieldType,
                 Name = f.Name,
                 DBAttributes = getAttributes(f.GetCustomAttributes()).ToArray(),
@@ -55,6 +74,9 @@ namespace Simple.DatabaseWrapper.TypeReader
             return new TypeItemInfo()
             {
                 ItemType = ItemType.Property,
+                fieldInfo = null,
+                propertyInfo = p,
+
                 Type = p.PropertyType,
                 Name = p.Name,
                 DBAttributes = getAttributes(p.GetCustomAttributes()).ToArray(),
@@ -90,6 +112,10 @@ namespace Simple.DatabaseWrapper.TypeReader
                 else if (att is UniqueAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.Unique, att);
+                }
+                else if (att is IgnoreAtribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.Ignore, att);
                 }
             }
         }

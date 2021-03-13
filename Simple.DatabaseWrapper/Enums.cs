@@ -12,5 +12,7 @@
         NotNull,
         PrimaryKey,
         Unique,
+
+        Ignore,
     }
 }
