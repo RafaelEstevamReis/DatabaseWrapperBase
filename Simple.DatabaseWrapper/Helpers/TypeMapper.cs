@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Data.Common;
 using System.Drawing;
+using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
 {
     public class TypeMapper
     {
-        public static T MapObject<T>(string[] colNames, DbDataReader reader)
+        public static T MapObject<T>(string[] colNames, DbDataReader reader, ReaderCachedCollection cachedCollection)
         {
+            var info = cachedCollection.GetInfo<T>();
             object t = Activator.CreateInstance<T>();
-            foreach (var p in typeof(T).GetProperties())
+
+            foreach (var p in info.Items)
             {
                 var clnIdx = Array.IndexOf(colNames, p.Name);
                 if (clnIdx < 0) continue;
@@ -18,13 +21,13 @@ namespace Simple.DatabaseWrapper.Helpers
             }
             return (T)t;
         }
-        private static void mapColumn<T>(T obj, System.Reflection.PropertyInfo p, DbDataReader reader, int clnIdx)
+        private static void mapColumn<T>(T obj, TypeItemInfo t, DbDataReader reader, int clnIdx)
             where T : new()
         {
-            object objVal = ReadValue(reader, p.PropertyType, clnIdx);
-
-            p.SetValue(obj, objVal);
+            object objVal = ReadValue(reader, t.Type, clnIdx);
+            t.SetValue(obj, objVal);
         }
+
         public static object ReadValue(DbDataReader reader, Type type, int ColumnIndex)
         {
             object objVal;

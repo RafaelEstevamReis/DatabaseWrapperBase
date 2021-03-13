@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Drawing;
+using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
 {
+    /// <summary>
+    /// Helper class for Types
+    /// </summary>
     public static class TypeHelper
     {
+        /// <summary>
+        /// Check if a specified type is 'Simple'
+        /// </summary>
         public static bool CheckIfSimpleType(this Type typeT)
         {
             if (typeT.IsPrimitive) return true;
@@ -27,6 +34,10 @@ namespace Simple.DatabaseWrapper.Helpers
             return underlyingType != null && CheckIfSimpleType(underlyingType);
         }
 
+        /// <summary>
+        /// Retrieve the value of a property
+        /// </summary>
+        [Obsolete]
         public static object ReadParamValue(System.Reflection.PropertyInfo p, object parameters)
         {
             var objVal = p.GetValue(parameters);
@@ -42,6 +53,22 @@ namespace Simple.DatabaseWrapper.Helpers
             return objVal;
         }
 
+        /// <summary>
+        /// Retrieve the value of a field or property
+        /// </summary>
+        public static object ReadParamValue(TypeItemInfo info, object parameters)
+        {
+            var objVal = info.GetValue(parameters);
+            if (objVal is Color color)
+            {
+                return new byte[] { color.A, color.R, color.G, color.B };
+            }
+            if (objVal is TimeSpan span)
+            {
+                objVal = span.Ticks;
+            }
 
+            return objVal;
+        }
     }
 }
