@@ -5,3 +5,6 @@
 # DatabaseWrapperBase
 A base repository for all database wrappers
 
+Sqlite: [Simple.Sqlite](https://github.com/RafaelEstevamReis/SqliteWrapper)
+
+MySql: **Work In Progress** [Simple.MySql](https://github.com/RafaelEstevamReis/MysqlWrapper)
