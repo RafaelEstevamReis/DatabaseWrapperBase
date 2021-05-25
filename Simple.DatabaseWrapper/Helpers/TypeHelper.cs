@@ -35,25 +35,6 @@ namespace Simple.DatabaseWrapper.Helpers
         }
 
         /// <summary>
-        /// Retrieve the value of a property
-        /// </summary>
-        [Obsolete]
-        public static object ReadParamValue(System.Reflection.PropertyInfo p, object parameters)
-        {
-            var objVal = p.GetValue(parameters);
-            if (objVal is Color color)
-            {
-                return new byte[] { color.A, color.R, color.G, color.B };
-            }
-            if (objVal is TimeSpan span)
-            {
-                objVal = span.Ticks;
-            }
-
-            return objVal;
-        }
-
-        /// <summary>
         /// Retrieve the value of a field or property
         /// </summary>
         public static object ReadParamValue(TypeItemInfo info, object parameters)
