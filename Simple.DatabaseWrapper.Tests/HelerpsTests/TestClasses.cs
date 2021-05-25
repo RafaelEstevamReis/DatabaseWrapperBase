@@ -21,6 +21,8 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests
         [XmlIgnore]
         public int P7 { get; set; }
         public int P8 { get; set; }
+        public int PGet { get; }
+        public int PSet { set { _ = value; } }
     }
     public class TestClassFields
     {

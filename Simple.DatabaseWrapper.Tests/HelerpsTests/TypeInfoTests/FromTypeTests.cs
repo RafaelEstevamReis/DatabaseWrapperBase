@@ -13,7 +13,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             var tr = TypeInfo.FromType<TestClassProps>();
 
             Assert.Equal("TestClassProps", tr.TypeName);
-            Assert.Equal(8, tr.Items.Length);
+            Assert.Equal(10, tr.Items.Length);
         }
         [Fact]
         public void FromType_BasicTestsType()
@@ -21,7 +21,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             var tr = TypeInfo.FromType(typeof(TestClassProps));
 
             Assert.Equal("TestClassProps", tr.TypeName);
-            Assert.Equal(8, tr.Items.Length);
+            Assert.Equal(10, tr.Items.Length);
         }
 
         [Fact]
