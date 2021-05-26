@@ -18,6 +18,9 @@ namespace Simple.DatabaseWrapper.TypeReader
         public Type Type { get; private set; }
         public AttributeInfo[] DBAttributes { get; private set; }
 
+        public bool CanRead => ItemType == ItemType.Field || propertyInfo.CanRead;
+        public bool CanWrite => ItemType == ItemType.Field || propertyInfo.CanWrite;
+
         public bool Is(ColumnAttributes attribute) => DBAttributes.Any(o => o.ColumnAttributes == attribute);
         public bool HasDefaultValue(out object DefaultValue)
         {
