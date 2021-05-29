@@ -49,7 +49,6 @@ namespace System.Linq
         {
             return new List<T>(source).ToArray();
         }
-
     }
 }
 #endif
