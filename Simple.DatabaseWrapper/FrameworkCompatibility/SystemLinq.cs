@@ -47,14 +47,7 @@ namespace System.Linq
         // Not great, but works for small things
         public static T[] ToArray<T>(this IEnumerable<T> source)
         {
-            var lst = source.ToList();
-            T[] arr = new T[lst.Count];
-
-            for (int i = 0; i < arr.Length; i++)
-            {
-                arr[i] = lst[i];
-            }
-            return arr;
+            return new List<T>(source).ToArray();
         }
 
     }
