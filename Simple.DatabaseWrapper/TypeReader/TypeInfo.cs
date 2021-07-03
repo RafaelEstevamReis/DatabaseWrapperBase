@@ -8,6 +8,7 @@ namespace Simple.DatabaseWrapper.TypeReader
     {
         public string TypeName { get; set; }
         public TypeItemInfo[] Items { get; set; }
+        public bool IsAnonymousType { get; set; }
 
         public IEnumerable<string> GetNames()
         {
@@ -25,8 +26,9 @@ namespace Simple.DatabaseWrapper.TypeReader
         {
             return new TypeInfo()
             {
-                 TypeName = type.Name,
-                 Items = TypeItemInfo.FromType(type)
+                TypeName = type.Name,
+                IsAnonymousType = Helpers.TypeHelper.CheckIfAnonymousType(type),
+                Items = TypeItemInfo.FromType(type)
             };
         }
     }
