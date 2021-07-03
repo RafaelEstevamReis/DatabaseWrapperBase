@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Simple.DatabaseWrapper.Helpers;
 using Xunit;
 
@@ -30,6 +31,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeHelperTests
         [InlineData(typeof(DateTime))]
         [InlineData(typeof(TimeSpan))]
         [InlineData(typeof(Guid))]
+        [InlineData(typeof(Color))]
         public void CheckIfSimpleType_NotPrimitive(Type t)
         {
             Assert.True(TypeHelper.CheckIfSimpleType(t));
