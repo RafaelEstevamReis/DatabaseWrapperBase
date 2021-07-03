@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
@@ -51,5 +52,30 @@ namespace Simple.DatabaseWrapper.Helpers
 
             return objVal;
         }
+        /// <summary>
+        /// Check if a type is Anonymous: IsClass, IsGenericType, IsCompillerGenerated, has NotPublic flag,
+        /// Name starts with '&lt;&gt;' or 'VB$'
+        /// </summary>
+        public static bool CheckIfAnonymousType(Type type)
+        {
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            // has a namespace equal to null
+            // if (type.Namespace == null) return true; - Not found any official source to specify as Absolute TRUE
+
+            // It will be a class
+            if (!type.IsClass) return false;
+
+            // It will be internal
+            if (type.IsPublic) return false;
+
+            //if (!type.IsGenericType) return false; // [new { }] is not IsGenericType
+            // It will have the CompilerGeneratedAttribute applied to it
+            bool isCompilerGenerated = Attribute.IsDefined(type, typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false);
+            if (!isCompilerGenerated) return false;
+
+            // Name starts With "<>" (C#) or "VB$" (VB.Net)
+            return type.Name.StartsWith("<>") || type.Name.StartsWith("VB$");
+        }
+
     }
 }
