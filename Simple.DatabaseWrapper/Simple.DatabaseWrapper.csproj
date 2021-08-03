@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netstandard2.0;net5.0;NET48;NET46;NET45;net451;net472;NET40;NET20</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <Authors>RafaelEstevam.net</Authors>
     <Company>Rafael Estevam</Company>
     <Description>A base for all Database Wrappers</Description>
@@ -12,7 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>database wrappers</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>Paired with commit a367a18
+    <PackageReleaseNotes>Paired with commit 07a7f7c
 https://github.com/RafaelEstevamReis/DatabaseWrapperBase
 </PackageReleaseNotes>
   </PropertyGroup>
