@@ -6,11 +6,11 @@ namespace Simple.DatabaseWrapper.Interfaces
     {
         string ColumnName { get; }
         Type NativeType { get; }
-        bool IsPK { get; }
-        bool IsAI { get; }
-        bool IsUnique { get; }
-        bool AllowNulls { get; }
-        object DefaultValue { get; }
+        bool IsPK { get; set; }
+        bool IsAI { get; set; }
+        bool IsUnique { get; set; }
+        bool AllowNulls { get; set; }
+        object DefaultValue { get; set; }
 
         string ExportColumnDefinitionAsStatement();
         string ExportAddColumnAsStatement();
