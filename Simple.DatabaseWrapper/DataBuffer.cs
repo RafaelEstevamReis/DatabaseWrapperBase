@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#if NET5_0 || NETCOREAPP3_1
+using System.Collections.Concurrent;
+#endif
+
 namespace Simple.DatabaseWrapper
 {
     /// <summary>
-    /// Bufferizes data to flush in batches
+    /// Bufferizes data to flush in batches.
+    /// Uses ConcurrentBag on Net5 and NetCore3.1, Uses List+Lock on others frameworks
     /// </summary>
     public class DataBuffer<T> : IDisposable
     {
+        /// <summary>
+        /// Ignore Nulls additions
+        /// </summary>
+        public bool IgnoreNulls { get; set; } = true;
+
         /// <summary>
         /// Batch size
         /// </summary>
@@ -17,7 +27,12 @@ namespace Simple.DatabaseWrapper
         /// </summary>
         public Action<IEnumerable<T>> FlushData { get; }
 
-        List<T> queue;
+#if NET5_0 || NETCOREAPP3_1
+        readonly ConcurrentBag<T> queue = new ConcurrentBag<T>();
+#else
+        readonly List<T> queue = new List<T>();
+#endif
+
         /// <summary>
         /// Creates a new buffer instance
         /// </summary>
@@ -27,16 +42,24 @@ namespace Simple.DatabaseWrapper
         {
             Quantity = quantity;
             FlushData = flushData ?? throw new ArgumentNullException(nameof(flushData));
-            queue = new List<T>(quantity + 2);
         }
         /// <summary>
         /// Adds a new value to the buffer
         /// </summary>
         public void Add(T value)
         {
-            queue.Add(value);
+            if (IgnoreNulls && value is null) return;
 
-            if (queue.Count > Quantity)
+#if NET5_0 || NETCOREAPP3_1
+            queue.Add(value);
+#else
+            lock (queue)
+            {
+                queue.Add(value);
+            }
+#endif
+
+            if (queue.Count >= Quantity)
             {
                 Flush();
             }
