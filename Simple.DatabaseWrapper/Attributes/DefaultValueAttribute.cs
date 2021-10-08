@@ -14,7 +14,7 @@ namespace Simple.DatabaseWrapper.Attributes
         /// <summary>
         /// Creates a new instance
         /// </summary>
-        /// <param name="defaultValue"></param>
+        /// <param name="defaultValue">Default value</param>
         public DefaultValueAttribute(object defaultValue)
         {
             DefaultValue = defaultValue;
