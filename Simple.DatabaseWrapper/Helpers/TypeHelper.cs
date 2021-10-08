@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;
 using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
