@@ -7,10 +7,17 @@ using System.Collections.Concurrent;
 
 namespace Simple.DatabaseWrapper
 {
+#if NET5_0 || NETCOREAPP3_1
     /// <summary>
     /// Bufferizes data to flush in batches.
-    /// Uses ConcurrentBag on Net5 and NetCore3.1, Uses List+Lock on others frameworks
+    /// Using ConcurrentBag (Net5 and NetCore3.1)
     /// </summary>
+#else
+    /// <summary>
+    /// Bufferizes data to flush in batches.
+    /// Using List+Lock (Ueses ConcurrentBag on Net5 and NetCore3.1)
+    /// </summary>
+#endif
     public class DataBuffer<T> : IDisposable
     {
         /// <summary>
