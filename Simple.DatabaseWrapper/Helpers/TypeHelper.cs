@@ -40,13 +40,10 @@ namespace Simple.DatabaseWrapper.Helpers
         public static object ReadParamValue(TypeItemInfo info, object parameters)
         {
             var objVal = info.GetValue(parameters);
+
             if (objVal is Guid guid) return guid.ToByteArray();
             if (objVal is Color color) return new byte[] { color.A, color.R, color.G, color.B };
-
-            if (objVal is TimeSpan span)
-            {
-                objVal = span.Ticks;
-            }
+            if (objVal is TimeSpan span) return span.Ticks;
 
             return objVal;
         }
