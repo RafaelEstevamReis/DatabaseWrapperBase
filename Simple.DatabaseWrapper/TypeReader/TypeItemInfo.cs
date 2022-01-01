@@ -48,6 +48,14 @@ namespace Simple.DatabaseWrapper.TypeReader
             else propertyInfo.SetValue(Object, Value);
         }
 
+        public T GetAttribute<T>(ColumnAttributes attribute)  
+            where T: Attribute
+        {
+            return DBAttributes.Where(a => a.ColumnAttributes == attribute)
+                               .Select(a => a.Attribute as T)
+                               .FirstOrDefault();
+        }
+
         public static TypeItemInfo[] FromType(Type type)
         {
             var fields = type.GetFields()
@@ -85,6 +93,7 @@ namespace Simple.DatabaseWrapper.TypeReader
                 DBAttributes = getAttributes(p.GetCustomAttributes()).ToArray(),
             };
         }
+
         private static IEnumerable<AttributeInfo> getAttributes(IEnumerable<Attribute> attributes)
         {
             foreach (var att in attributes)
