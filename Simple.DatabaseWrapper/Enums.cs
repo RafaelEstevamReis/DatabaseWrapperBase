@@ -9,6 +9,8 @@
     {
         AllowNull,
         DefaultValue,
+        AutoIncrement,
+        Size,
         NotNull,
         PrimaryKey,
         Unique,

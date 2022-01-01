@@ -3,8 +3,8 @@
 namespace Simple.DatabaseWrapper.Attributes
 {
     /// <summary>
-    /// Specify that this column should be ignored
+    /// Specify that this column has AutoIncrement
     /// </summary>
-    public class IgnoreAtribute : Attribute
+    public class AutoIncrementAttribute : Attribute
     { }
 }

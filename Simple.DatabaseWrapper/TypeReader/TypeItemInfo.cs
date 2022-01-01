@@ -116,9 +116,17 @@ namespace Simple.DatabaseWrapper.TypeReader
                 {
                     yield return new AttributeInfo(ColumnAttributes.Unique, att);
                 }
-                else if (att is IgnoreAtribute)
+                else if (att is IgnoreAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.Ignore, att);
+                }
+                else if (att is SizeAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.Size, att);
+                }
+                else if (att is AutoIncrementAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.AutoIncrement, att);
                 }
             }
         }
