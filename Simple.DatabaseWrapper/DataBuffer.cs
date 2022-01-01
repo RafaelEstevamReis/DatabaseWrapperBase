@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NET5_0 || NETCOREAPP3_1
 using System.Collections.Concurrent;
 #endif
 
 namespace Simple.DatabaseWrapper
 {
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NET5_0 || NETCOREAPP3_1
     /// <summary>
     /// Bufferizes data to flush in batches.
     /// Using ConcurrentBag (Net5 and NetCore3.1)
@@ -34,7 +34,7 @@ namespace Simple.DatabaseWrapper
         /// </summary>
         public Action<IEnumerable<T>> FlushData { get; }
 
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NET5_0 || NETCOREAPP3_1
         readonly ConcurrentBag<T> queue = new ConcurrentBag<T>();
 #else
         readonly List<T> queue = new List<T>();
@@ -57,7 +57,7 @@ namespace Simple.DatabaseWrapper
         {
             if (IgnoreNulls && value is null) return;
 
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NET5_0 || NETCOREAPP3_1
             queue.Add(value);
 #else
             lock (queue)
