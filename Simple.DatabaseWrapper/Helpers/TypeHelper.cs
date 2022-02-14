@@ -36,12 +36,23 @@ namespace Simple.DatabaseWrapper.Helpers
 
         /// <summary>
         /// Retrieve the value of a field or property
+        /// Guid is read as System.Guid
         /// </summary>
         public static object ReadParamValue(TypeItemInfo info, object parameters)
+            // reverts #25ff772
+            => ReadParamValue(info, parameters, false);
+
+        /// <summary>
+        /// Retrieve the value of a field or property
+        /// </summary>
+        public static object ReadParamValue(TypeItemInfo info, object parameters, bool handleGuidAsByteArray)
         {
             var objVal = info.GetValue(parameters);
 
-            if (objVal is Guid guid) return guid.ToByteArray();
+            if (handleGuidAsByteArray)
+            {
+                if (objVal is Guid guid) return guid.ToByteArray();
+            }
             if (objVal is Color color) return new byte[] { color.A, color.R, color.G, color.B };
             if (objVal is TimeSpan span) return span.Ticks;
 
