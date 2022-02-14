@@ -131,6 +131,12 @@
         <member name="M:Simple.DatabaseWrapper.Helpers.TypeHelper.ReadParamValue(Simple.DatabaseWrapper.TypeReader.TypeItemInfo,System.Object)">
             <summary>
             Retrieve the value of a field or property
+            Guid is read as System.Guid
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Helpers.TypeHelper.ReadParamValue(Simple.DatabaseWrapper.TypeReader.TypeItemInfo,System.Object,System.Boolean)">
+            <summary>
+            Retrieve the value of a field or property
             </summary>
         </member>
         <member name="M:Simple.DatabaseWrapper.Helpers.TypeHelper.CheckIfAnonymousType(System.Type)">
