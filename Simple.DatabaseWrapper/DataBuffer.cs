@@ -18,7 +18,7 @@ namespace Simple.DatabaseWrapper
     /// Using List+Lock (Ueses ConcurrentBag on Net5 and NetCore3.1)
     /// </summary>
 #endif
-    public class DataBuffer<T> : IDisposable
+    public sealed class DataBuffer<T> : IDisposable
     {
         /// <summary>
         /// Ignore Nulls additions
