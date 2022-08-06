@@ -37,6 +37,31 @@ namespace Simple.DatabaseWrapper
 #endif
 
         /// <summary>
+        /// Map fields from a model to another
+        /// </summary>
+        public static TOut MapModel<TIn, TOut>(TIn source)
+        {
+            var tIn = typeof(TIn);
+            var tOut = typeof(TOut);
+            var inFields = tIn.GetFields();
+            var outFields = tOut.GetFields();
+
+            var newOut = (TOut)Activator.CreateInstance(tOut);
+
+            foreach(var field in inFields)
+            {
+                var f = outFields.Where(f => f.Name == field.Name) // NET20 does not support predicate on firstOrDefault
+                                 .FirstOrDefault();
+                if (f == null) continue;
+                
+                var val = field.GetValue(source);
+                f.SetValue(newOut, val);
+            }
+
+            return newOut;
+        }
+
+        /// <summary>
         /// Creates a recursive copy of an object
         /// </summary>
         public static T CopyObject<T>(T original)
