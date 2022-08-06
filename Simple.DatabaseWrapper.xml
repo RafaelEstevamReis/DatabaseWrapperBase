@@ -118,6 +118,32 @@
             Disposes the object and flushes all remaining data
             </summary>
         </member>
+        <member name="T:Simple.DatabaseWrapper.DataClone">
+            <summary>
+            Object cloning tool
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.DataClone.CopyWithSerialization``1(System.Object)">
+            <summary>
+            Clone an Object using serialization, slow but versatile
+            This one, uses old XmlSerializer
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.DataClone.MapModel``2(``0)">
+            <summary>
+            Map properties from a model to another. Property name is used for matching
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.DataClone.CopyObject``1(``0)">
+            <summary>
+            Creates a recursive copy of an object
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.DataClone.CopyObject(System.Object)">
+            <summary>
+            Creates a recursive copy of an object
+            </summary>
+        </member>
         <member name="T:Simple.DatabaseWrapper.Helpers.TypeHelper">
             <summary>
             Helper class for Types
