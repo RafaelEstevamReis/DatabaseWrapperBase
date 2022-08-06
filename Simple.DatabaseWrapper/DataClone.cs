@@ -37,24 +37,28 @@ namespace Simple.DatabaseWrapper
 #endif
 
         /// <summary>
-        /// Map fields from a model to another
+        /// Map properties from a model to another
         /// </summary>
         public static TOut MapModel<TIn, TOut>(TIn source)
         {
             var tIn = typeof(TIn);
             var tOut = typeof(TOut);
-            var inFields = tIn.GetFields();
-            var outFields = tOut.GetFields();
+            var inProps = tIn.GetProperties();
+            var outProps = tOut.GetProperties();
 
             var newOut = (TOut)Activator.CreateInstance(tOut);
 
-            foreach(var field in inFields)
+            foreach(var prop in inProps)
             {
-                var f = outFields.Where(f => f.Name == field.Name) // NET20 does not support predicate on firstOrDefault
-                                 .FirstOrDefault();
-                if (f == null) continue;
+                if (!prop.CanRead) continue;
                 
-                var val = field.GetValue(source);
+                var f = outProps.Where(f => f.Name == prop.Name) // NET20 does not support predicate on firstOrDefault
+                                 .FirstOrDefault();
+                
+                if (f == null) continue;
+                if (!f.CanWrite) continue;
+
+                var val = prop.GetValue(source);
                 f.SetValue(newOut, val);
             }
 
