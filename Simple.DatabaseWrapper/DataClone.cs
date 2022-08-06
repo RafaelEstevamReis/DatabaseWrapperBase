@@ -56,12 +56,11 @@ namespace Simple.DatabaseWrapper
 
                 var destProp = outProps.Where(f => f.Name == currProp.Name) // NET20 does not support predicate on firstOrDefault
                                        .FirstOrDefault();
-
                 if (destProp == null) continue;
                 if (!destProp.CanWrite) continue;
 
                 var newValue = processValue(currProp.PropertyType,
-                                            destProp.PropertyType, 
+                                            destProp.PropertyType,
                                             currProp.GetValue(source));
 
                 destProp.SetValue(newOut, newValue);
