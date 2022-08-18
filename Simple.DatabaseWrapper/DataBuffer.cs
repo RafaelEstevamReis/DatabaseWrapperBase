@@ -41,6 +41,11 @@ namespace Simple.DatabaseWrapper
 #endif
 
         /// <summary>
+        /// Data about this buffer
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
         /// Creates a new buffer instance
         /// </summary>
         /// <param name="quantity">Batch size</param>
