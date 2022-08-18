@@ -96,6 +96,11 @@
             Flush action
             </summary>
         </member>
+        <member name="P:Simple.DatabaseWrapper.DataBuffer`1.Tag">
+            <summary>
+            Data about this buffer
+            </summary>
+        </member>
         <member name="M:Simple.DatabaseWrapper.DataBuffer`1.#ctor(System.Int32,System.Action{System.Collections.Generic.IEnumerable{`0}})">
             <summary>
             Creates a new buffer instance
