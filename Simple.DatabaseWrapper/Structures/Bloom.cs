@@ -56,6 +56,34 @@ namespace Simple.DatabaseWrapper.Structures
             return true;
         }
 
+        public double GetTruthRatio()
+        {
+            int count = 0;
+            foreach (bool bit in Array)
+            {
+                if (!bit) continue;
+                count++;
+            }
+            return (double)count / Array.Length;
+        }
+
+        public static int BestArraySize(int estimatedCapacity)
+            => BestArraySize(estimatedCapacity, BestTheoricalErrorRate(estimatedCapacity));
+        public static int BestArraySize(int estimatedCapacity, float desiredErrorRate)
+        {
+            // Error rate is:
+            // (1-e^(-kn/m))^k
+            // And
+            // k=(m/n)ln(2)
+
+            var powLog2 = Math.Pow(2, Math.Log(2.0));
+            var invPowLog2 = 1.0 / powLog2;
+
+            return (int)Math.Ceiling(estimatedCapacity * Math.Log(desiredErrorRate, invPowLog2));
+        }
+        public static float BestTheoricalErrorRate(int estimatedCapacity)
+            => 1.0f / estimatedCapacity;
+
         private static int getIndex(IHashFunction hash, object item, int len)
         {
             int h1 = hash.ComputeHash(item);
