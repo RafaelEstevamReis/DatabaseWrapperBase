@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Simple.DatabaseWrapper.Structures
 {
@@ -11,12 +7,23 @@ namespace Simple.DatabaseWrapper.Structures
     {
         public IHashFunction Primary { get; private set; }
         public IHashFunction Secondary { get; private set; }
-
         public BitArray Array { get; private set; }
 
+        /// <summary>
+        /// Creates a simple bloom filter implementation using BloomHash_GetHashCode as second hash
+        /// </summary>
+        public Bloom(IHashFunction primary, int arraySize)
+            : this(primary, new BloomHash_GetHashCode(), arraySize)
+        { }
+        /// <summary>
+        /// Creates a simple bloom filter implementation
+        /// </summary>
         public Bloom(IHashFunction primary, IHashFunction secondary, int arraySize)
             : this(primary, secondary, new BitArray(arraySize))
         { }
+        /// <summary>
+        /// Creates a simple bloom filter implementation
+        /// </summary>
         public Bloom(IHashFunction primary, IHashFunction secondary, BitArray array)
         {
             Primary = primary;
