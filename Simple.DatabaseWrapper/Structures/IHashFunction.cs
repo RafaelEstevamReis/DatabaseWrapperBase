@@ -2,6 +2,6 @@
 {
     public interface IHashFunction
     {
-        int ComputeHash(object o);
+        uint ComputeHash(object o);
     }
 }

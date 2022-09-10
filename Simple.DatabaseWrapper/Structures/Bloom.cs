@@ -86,8 +86,8 @@ namespace Simple.DatabaseWrapper.Structures
 
         private static int getIndex(IHashFunction hash, object item, int len)
         {
-            int h1 = hash.ComputeHash(item);
-            return Math.Abs(h1) % len;
+            uint h1 = hash.ComputeHash(item);
+            return (int)(h1 % len);
         }
 
     }
