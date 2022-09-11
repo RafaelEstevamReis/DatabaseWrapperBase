@@ -11,7 +11,7 @@ namespace Simple.DatabaseWrapper.Structures
         public BitArray Array { get; private set; }
 
         public Bloom(int arraySize)
-            : this(getPrimaryHash(), new BloomHash_GetHashCode(), arraySize)
+            : this(getPrimaryHash(), getSecondaryHash(), arraySize)
         { }
         private static IHashFunction getPrimaryHash()
         {
@@ -21,6 +21,16 @@ namespace Simple.DatabaseWrapper.Structures
             if (typeof(T) == typeof(uint)) return new BloomHash_ThomasMix();
             if (typeof(T) == typeof(long)) return new BloomHash_ThomasMix();
             if (typeof(T) == typeof(ulong)) return new BloomHash_ThomasMix();
+            throw new NotSupportedException("Primary IHashFunction must be specified for <T> when T is " + typeof(T).Name);
+        }
+        private static IHashFunction getSecondaryHash()
+        {
+            if (typeof(T) == typeof(string)) return new BloomHash_GetHashCode();
+            if (typeof(T) == typeof(byte[])) return new BloomHash_GetHashCode();
+            if (typeof(T) == typeof(int)) return new BloomHash_Murmur3();
+            if (typeof(T) == typeof(uint)) return new BloomHash_Murmur3();
+            if (typeof(T) == typeof(long)) return new BloomHash_Murmur3();
+            if (typeof(T) == typeof(ulong)) return new BloomHash_Murmur3();
             throw new NotSupportedException("Primary IHashFunction must be specified for <T> when T is " + typeof(T).Name);
         }
 
@@ -89,9 +99,9 @@ namespace Simple.DatabaseWrapper.Structures
             return (double)count / Array.Length;
         }
 
-        public static int BestArraySize(int estimatedCapacity)
+        public static long BestArraySize(int estimatedCapacity)
             => BestArraySize(estimatedCapacity, BestTheoricalErrorRate(estimatedCapacity));
-        public static int BestArraySize(int estimatedCapacity, float desiredErrorRate)
+        public static long BestArraySize(int estimatedCapacity, float desiredErrorRate)
         {
             // Error rate is:
             // (1-e^(-kn/m))^k
@@ -101,7 +111,7 @@ namespace Simple.DatabaseWrapper.Structures
             var powLog2 = Math.Pow(2, Math.Log(2.0));
             var invPowLog2 = 1.0 / powLog2;
 
-            return (int)Math.Ceiling(estimatedCapacity * Math.Log(desiredErrorRate, invPowLog2));
+            return Convert.ToInt64(Math.Ceiling(estimatedCapacity * Math.Log(desiredErrorRate, invPowLog2)));
         }
         public static float BestTheoricalErrorRate(int estimatedCapacity)
             => 1.0f / estimatedCapacity;
