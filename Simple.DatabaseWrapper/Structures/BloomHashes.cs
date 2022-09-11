@@ -3,12 +3,38 @@
 namespace Simple.DatabaseWrapper.Structures
 {
     /// <summary>
-    /// Computes hash using .Net internal GetHashCode
+    /// Computes hash using .Net internal GetHashCode, and un-randomized String.GetHashCode
     /// </summary>
     public class BloomHash_GetHashCode : IHashFunction
     {
         public uint ComputeHash(object o)
-            => unchecked((uint)o.GetHashCode());
+        {
+            if (o is string str)
+            {
+                return unchecked((uint)GetDeterministicHashCode(str));
+            }
+
+            return unchecked((uint)o.GetHashCode());
+        }
+        // https://github.com/dotnet/corefx/blob/a10890f4ffe0fadf090c922578ba0e606ebdd16c/src/Common/src/System/Text/StringOrCharArray.cs#L140
+        static int GetDeterministicHashCode(string str)
+        {
+            unchecked
+            {
+                int hash1 = (5381 << 16) + 5381;
+                int hash2 = hash1;
+
+                for (int i = 0; i < str.Length; i += 2)
+                {
+                    hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                    if (i == str.Length - 1)
+                        break;
+                    hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+                }
+
+                return hash1 + (hash2 * 1566083941);
+            }
+        }
     }
     /// <summary>
     /// Uses jitbit's MurmurHash2 implementation
@@ -29,6 +55,9 @@ namespace Simple.DatabaseWrapper.Structures
             => MurmurHash2.Hash(BitConverter.GetBytes(data));
 
     }
+    /// <summary>
+    /// Uses Thomas Wang's bitMix implementation
+    /// </summary>
     public class BloomHash_ThomasMix : IHashFunction
     {
         public uint ComputeHash(object o)
