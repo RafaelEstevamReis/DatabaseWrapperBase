@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Simple.DatabaseWrapper.Structures
 {
@@ -31,6 +32,13 @@ namespace Simple.DatabaseWrapper.Structures
             Array = array;
         }
 
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (var i in items)
+            {
+                Add(i);
+            }
+        }
         public void Add(T item)
         {
             int len = Array.Length;
