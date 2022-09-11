@@ -44,14 +44,21 @@ namespace Simple.DatabaseWrapper.Structures
         public uint ComputeHash(object o)
         {
             if (o is int iVal) return intHash(iVal);
+            if (o is uint uiVal) return uintHash(uiVal);
             if (o is long lVal) return longHash(lVal);
+            if (o is ulong ulVal) return ulongHash(ulVal);
             if (o is string sVal) return MurmurHash2.Hash(sVal);
             if (o is byte[] baVal) return MurmurHash2.Hash(baVal);
+            if (o is Guid gVal) return MurmurHash2.Hash(gVal.ToByteArray());
             throw new NotSupportedException();
         }
         static uint intHash(int data)
             => MurmurHash2.Hash(BitConverter.GetBytes(data));
+        static uint uintHash(uint data)
+            => MurmurHash2.Hash(BitConverter.GetBytes(data));
         static uint longHash(long data)
+            => MurmurHash2.Hash(BitConverter.GetBytes(data));
+        static uint ulongHash(ulong data)
             => MurmurHash2.Hash(BitConverter.GetBytes(data));
 
     }
@@ -64,11 +71,20 @@ namespace Simple.DatabaseWrapper.Structures
         {
             if (o is int iVal)
             {
-                return IntHashFunctions.TomasIntHash(unchecked((uint)iVal));
+                return IntHashFunctions.Tomas3v1IntHash(unchecked((uint)iVal));
+            }
+            if (o is uint uiVal)
+            {
+                return IntHashFunctions.Tomas3v1IntHash(uiVal);
             }
             if (o is long lVal)
             {
                 var lResult = IntHashFunctions.TomasLongHash(unchecked((ulong)lVal));
+                return IntHashFunctions.hash6432shift(lResult);
+            }
+            if (o is ulong ulVal)
+            {
+                var lResult = IntHashFunctions.TomasLongHash(ulVal);
                 return IntHashFunctions.hash6432shift(lResult);
             }
 

@@ -176,6 +176,52 @@
             Name starts with '&lt;&gt;' or 'VB$'
             </summary>
         </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.Bloom`1.#ctor(Simple.DatabaseWrapper.Structures.IHashFunction,System.Int32)">
+            <summary>
+            Creates a simple bloom filter implementation using BloomHash_GetHashCode as second hash
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.Bloom`1.#ctor(Simple.DatabaseWrapper.Structures.IHashFunction,Simple.DatabaseWrapper.Structures.IHashFunction,System.Int32)">
+            <summary>
+            Creates a simple bloom filter implementation
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.Bloom`1.#ctor(Simple.DatabaseWrapper.Structures.IHashFunction,Simple.DatabaseWrapper.Structures.IHashFunction,System.Collections.BitArray)">
+            <summary>
+            Creates a simple bloom filter implementation
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Structures.BloomHash_GetHashCode">
+            <summary>
+            Computes hash using .Net internal GetHashCode, and un-randomized String.GetHashCode
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Structures.BloomHash_Murmur2">
+            <summary>
+            Uses jitbit's MurmurHash2 implementation
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Structures.BloomHash_ThomasMix">
+            <summary>
+            Uses Thomas Wang's bitMix implementation
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.IntHashFunctions.TomasIntHash(System.UInt32)">
+            <summary>
+            Thomas Wang's 32 bit Mix Function
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.IntHashFunctions.TomasLongHash(System.UInt64)">
+            <summary>
+            Thomas Wang's 64 bit Mix Function
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Structures.MurmurHash2">
+            <summary>
+            jitbit's MurmurHash implementation
+            https://github.com/jitbit/MurmurHash.net
+            </summary>
+        </member>
         <member name="T:System.ComponentModel.DataAnnotations.KeyAttribute">
             <summary>
             Replacement for.NetCore System.ComponentModel.DataAnnotations

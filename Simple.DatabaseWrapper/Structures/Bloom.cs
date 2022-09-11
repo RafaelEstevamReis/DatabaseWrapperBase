@@ -10,6 +10,20 @@ namespace Simple.DatabaseWrapper.Structures
         public IHashFunction Secondary { get; private set; }
         public BitArray Array { get; private set; }
 
+        public Bloom(int arraySize)
+            : this(getPrimaryHash(), new BloomHash_GetHashCode(), arraySize)
+        { }
+        private static IHashFunction getPrimaryHash()
+        {
+            if (typeof(T) == typeof(string)) return new BloomHash_Murmur2();
+            if (typeof(T) == typeof(byte[])) return new BloomHash_Murmur2();
+            if (typeof(T) == typeof(int)) return new BloomHash_ThomasMix();
+            if (typeof(T) == typeof(uint)) return new BloomHash_ThomasMix();
+            if (typeof(T) == typeof(long)) return new BloomHash_ThomasMix();
+            if (typeof(T) == typeof(ulong)) return new BloomHash_ThomasMix();
+            throw new NotSupportedException("Primary IHashFunction must be specified for <T> when T is " + typeof(T).Name);
+        }
+
         /// <summary>
         /// Creates a simple bloom filter implementation using BloomHash_GetHashCode as second hash
         /// </summary>

@@ -17,6 +17,17 @@
             key ^= (key >> 16);
             return key;
         }
+        public static uint Tomas3v1IntHash(uint key)
+        {
+            key = ~key + (key << 15);
+            key ^= (key >> 12);
+            key += (key << 2);
+            key ^= (key >> 4);
+            key *= 2057;
+            key ^= (key >> 16);
+            return key;
+        }
+
         /// <summary>
         /// Thomas Wang's 64 bit Mix Function
         /// </summary>
