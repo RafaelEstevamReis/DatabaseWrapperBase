@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace Simple.DatabaseWrapper.Structures
 {
@@ -89,6 +90,41 @@ namespace Simple.DatabaseWrapper.Structures
             }
 
             throw new NotSupportedException();
+        }
+    }
+
+    public class BloomHash_Murmur3 : IHashFunction
+    {
+        public bool LowSide { get; }
+        public BloomHash_Murmur3()
+        { LowSide = true; }
+        public BloomHash_Murmur3(bool lowSide)
+        { LowSide = lowSide; }
+
+        public uint ComputeHash(object o)
+        {
+            ulong hash;
+
+            if (o is int iVal)
+            {
+                hash = IntHashFunctions.Murmur3_64(unchecked((ulong)iVal));
+            }
+            else if (o is uint uiVal)
+            {
+                hash = IntHashFunctions.Murmur3_64(uiVal);
+            }
+            else if (o is long lVal)
+            {
+                hash = IntHashFunctions.Murmur3_64(unchecked((ulong)lVal));
+            }
+            else if (o is ulong ulVal)
+            {
+                hash = IntHashFunctions.Murmur3_64(ulVal);
+            }
+            else throw new NotSupportedException();
+
+            if (LowSide) return (uint)(hash & 0xFFFFFFFF);
+            return (uint)(hash >> 32);
         }
     }
 
