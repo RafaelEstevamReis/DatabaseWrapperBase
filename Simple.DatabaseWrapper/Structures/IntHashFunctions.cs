@@ -54,5 +54,13 @@
             key = key ^ (key >> 22);
             return (uint)key;
         }
+
+        public static ulong Murmur3_64(ulong key)
+        {
+            key = (key ^ (key >> 33)) * 0xff51afd7ed558ccdL;
+            key = (key ^ (key >> 23)) * 0xc4ceb9fe1a85ec53L;
+            key = key ^ (key >> 33);
+            return key;
+        }
     }
 }
