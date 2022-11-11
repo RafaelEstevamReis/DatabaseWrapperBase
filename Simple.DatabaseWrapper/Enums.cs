@@ -14,6 +14,7 @@
         NotNull,
         PrimaryKey,
         Unique,
+        Indexed,
 
         Ignore,
     }

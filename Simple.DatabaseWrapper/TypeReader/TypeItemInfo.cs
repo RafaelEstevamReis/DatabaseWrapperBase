@@ -125,6 +125,10 @@ namespace Simple.DatabaseWrapper.TypeReader
                 {
                     yield return new AttributeInfo(ColumnAttributes.Unique, att);
                 }
+                else if (att is IndexAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.Indexed, att);
+                }
                 else if (att is IgnoreAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.Ignore, att);
