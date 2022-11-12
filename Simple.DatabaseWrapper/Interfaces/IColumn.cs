@@ -11,6 +11,7 @@ namespace Simple.DatabaseWrapper.Interfaces
         bool IsUnique { get; set; }
         bool AllowNulls { get; set; }
         object DefaultValue { get; set; }
+        string[] Indexes { get; set; }
 
         string ExportColumnDefinitionAsStatement();
         string ExportAddColumnAsStatement();

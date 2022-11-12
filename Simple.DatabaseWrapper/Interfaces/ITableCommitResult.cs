@@ -5,5 +5,6 @@
         string TableName { get; }
         bool WasTableCreated { get; }
         string[] ColumnsAdded { get; }
+        string[] IndexesAdded { get; }
     }
 }
