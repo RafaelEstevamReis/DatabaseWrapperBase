@@ -8,3 +8,4 @@ A base repository for all database wrappers
 Sqlite: [Simple.Sqlite](https://github.com/RafaelEstevamReis/SqliteWrapper)
 
 MySql: **ARCHIVED** [Simple.MySql](https://github.com/RafaelEstevamReis/MysqlWrapper)
+Mysql: [Sharp.MySQL.Migrations](https://github.com/SharpSistemas/MigrationMySQL)
