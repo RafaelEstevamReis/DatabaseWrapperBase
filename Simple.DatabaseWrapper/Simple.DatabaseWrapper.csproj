@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1;NET48;NET46;NET45;net451;net472;NET40;NET20</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Version>1.3.6</Version>
-    <Authors>RafaelEstevam.net</Authors>
-    <Company>Rafael Estevam</Company>
-    <Description>A base for all Database Wrappers</Description>
-    <PackageProjectUrl>https://github.com/RafaelEstevamReis/DatabaseWrapperBase</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/RafaelEstevamReis/DatabaseWrapperBase.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>database wrappers</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>Paired with commit ff322fc
-https://github.com/RafaelEstevamReis/DatabaseWrapperBase
-</PackageReleaseNotes>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\Simple.DatabaseWrapper.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1;NET48;NET46;NET45;net451;net472;NET40;NET20</TargetFrameworks>
+		<LangVersion>10.0</LangVersion>
+		<Version>1.3.6</Version>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Authors>RafaelEstevam.net</Authors>
+		<Company>Rafael Estevam</Company>
+		<Description>A base for all Database Wrappers</Description>
+		<PackageProjectUrl>https://github.com/RafaelEstevamReis/DatabaseWrapperBase</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RafaelEstevamReis/DatabaseWrapperBase.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>database wrappers</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReleaseNotes>https://github.com/RafaelEstevamReis/DatabaseWrapperBase</PackageReleaseNotes>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>..\Simple.DatabaseWrapper.xml</DocumentationFile>
+	</PropertyGroup>
 
 </Project>
