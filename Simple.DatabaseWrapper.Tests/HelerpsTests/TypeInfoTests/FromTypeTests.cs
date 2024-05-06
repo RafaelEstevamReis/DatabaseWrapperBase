@@ -30,7 +30,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             var tr = TypeInfo.FromType<decimal>();
 
             Assert.Equal("Decimal", tr.TypeName);
-            Assert.Equal(5, tr.Items.Length);
+            Assert.Equal(6, tr.Items.Length); // NET8 changed the type
         }
 
         [Fact]
