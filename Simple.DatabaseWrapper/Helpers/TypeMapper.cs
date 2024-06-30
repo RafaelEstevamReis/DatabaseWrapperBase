@@ -37,26 +37,21 @@ namespace Simple.DatabaseWrapper.Helpers
             }
             else
             {
-                if (type.IsGenericType && type.Name == "Nullable`1")
-                {
-                    type = type.BaseType;
-                }
-
                 if (type == typeof(string)) objVal = reader.GetString(ColumnIndex);
                 else if (type == typeof(Uri)) objVal = new Uri((string)reader.GetValue(ColumnIndex));
-                else if (type == typeof(double)) objVal = reader.GetDouble(ColumnIndex);
-                else if (type == typeof(float)) objVal = reader.GetFloat(ColumnIndex);
-                else if (type == typeof(decimal)) objVal = reader.GetDecimal(ColumnIndex);
-                else if (type == typeof(int)) objVal = reader.GetInt32(ColumnIndex);
-                else if (type == typeof(uint)) objVal = Convert.ToUInt32(reader.GetValue(ColumnIndex));
-                else if (type == typeof(long)) objVal = reader.GetInt64(ColumnIndex);
-                else if (type == typeof(ulong)) objVal = Convert.ToUInt64(reader.GetValue(ColumnIndex));
-                else if (type == typeof(bool)) objVal = reader.GetBoolean(ColumnIndex);
-                else if (type == typeof(DateTime)) objVal = reader.GetDateTime(ColumnIndex);
-                else if (type == typeof(TimeSpan)) objVal = TimeSpan.FromTicks(reader.GetInt64(ColumnIndex));
+                else if (type == typeof(double) || type == typeof(double?)) objVal = reader.GetDouble(ColumnIndex);
+                else if (type == typeof(float) || type == typeof(float?)) objVal = reader.GetFloat(ColumnIndex);
+                else if (type == typeof(decimal) || type == typeof(decimal?)) objVal = reader.GetDecimal(ColumnIndex);
+                else if (type == typeof(int) || type == typeof(int?)) objVal = reader.GetInt32(ColumnIndex);
+                else if (type == typeof(uint) || type == typeof(uint?)) objVal = Convert.ToUInt32(reader.GetValue(ColumnIndex));
+                else if (type == typeof(long) || type == typeof(long?)) objVal = reader.GetInt64(ColumnIndex);
+                else if (type == typeof(ulong) || type == typeof(ulong?)) objVal = Convert.ToUInt64(reader.GetValue(ColumnIndex));
+                else if (type == typeof(bool) || type == typeof(bool?)) objVal = reader.GetBoolean(ColumnIndex);
+                else if (type == typeof(DateTime) || type == typeof(DateTime?)) objVal = reader.GetDateTime(ColumnIndex);
+                else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?)) objVal = TimeSpan.FromTicks(reader.GetInt64(ColumnIndex));
                 else if (type == typeof(byte[])) objVal = (byte[])reader.GetValue(ColumnIndex);
-                else if (type == typeof(Guid)) objVal = reader.GetGuid(ColumnIndex);
-                else if (type == typeof(Color))
+                else if (type == typeof(Guid) || type == typeof(Guid?)) objVal = reader.GetGuid(ColumnIndex);
+                else if (type == typeof(Color) || type == typeof(Color?))
                 {
                     var argb = (byte[])reader.GetValue(ColumnIndex);
                     objVal = Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);
