@@ -37,6 +37,11 @@ namespace Simple.DatabaseWrapper.Helpers
             }
             else
             {
+                if (type.IsGenericType && type.Name == "Nullable`1")
+                {
+                    type = type.BaseType;
+                }
+
                 if (type == typeof(string)) objVal = reader.GetString(ColumnIndex);
                 else if (type == typeof(Uri)) objVal = new Uri((string)reader.GetValue(ColumnIndex));
                 else if (type == typeof(double)) objVal = reader.GetDouble(ColumnIndex);
