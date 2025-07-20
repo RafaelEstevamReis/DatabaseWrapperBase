@@ -238,6 +238,39 @@
             https://github.com/jitbit/MurmurHash.net
             </summary>
         </member>
+        <member name="T:Simple.DatabaseWrapper.Structures.BloomFilter">
+            <summary>
+            Text optmized, case insensitive, bloom filter with MurmurHash2
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.#ctor(System.Int32,System.Double)">
+            <summary>
+            Creates a new BloomFilter instance
+            </summary>
+            <param name="expectedItems">Expected items</param>
+            <param name="falsePositiveRate">Expected false positives, default: 1%</param>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.Add(System.String)">
+            <summary>
+            Adds a new text to the filter
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.MightContain(System.String)">
+            <summary>
+            Check if the text can be in the filter
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.SaveToFile(System.String)">
+            <summary>
+            Serialize to a binary file
+            </summary>
+            <param name="filePath"></param>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.LoadFromFile(System.String)">
+            <summary>
+            Loads from a File
+            </summary>
+        </member>
         <member name="T:System.ComponentModel.DataAnnotations.KeyAttribute">
             <summary>
             Replacement for.NetCore System.ComponentModel.DataAnnotations
