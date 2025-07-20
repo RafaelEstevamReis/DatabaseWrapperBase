@@ -74,7 +74,7 @@ namespace Simple.DatabaseWrapper.Structures
             int h2b = getIndex(Secondary, item, len);
             Array.Set(h2b, true);
         }
-        public bool Containts(T item)
+        public bool Contains(T item)
         {
             int len = Array.Length;
 

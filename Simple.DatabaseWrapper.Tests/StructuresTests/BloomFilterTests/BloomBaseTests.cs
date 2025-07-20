@@ -15,8 +15,8 @@ namespace Simple.DatabaseWrapper.Tests.StructuresTests.BloomFilterTests
 
             filter.AddRange(contains);
 
-            foreach (var c in contains) Assert.True(filter.Containts(c));
-            foreach (var c in absent) Assert.False(filter.Containts(c));
+            foreach (var c in contains) Assert.True(filter.Contains(c));
+            foreach (var c in absent) Assert.False(filter.Contains(c));
         }
         [Fact]
         public void SimpleIntBloomTests()
@@ -28,8 +28,8 @@ namespace Simple.DatabaseWrapper.Tests.StructuresTests.BloomFilterTests
 
             filter.AddRange(contains);
 
-            foreach (var c in contains) Assert.True(filter.Containts(c));
-            foreach (var c in absent) Assert.False(filter.Containts(c));
+            foreach (var c in contains) Assert.True(filter.Contains(c));
+            foreach (var c in absent) Assert.False(filter.Contains(c));
         }
 
     }

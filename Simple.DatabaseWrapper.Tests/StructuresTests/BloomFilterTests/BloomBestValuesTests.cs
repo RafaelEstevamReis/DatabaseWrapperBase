@@ -69,7 +69,7 @@ namespace Simple.DatabaseWrapper.Tests.StructuresTests.BloomFilterTests
             int matches = 0;
             for(int i = 1000; i< 21_000; i++) // 20k tests
             {
-                if (bloom.Containts(i)) matches++;
+                if (bloom.Contains(i)) matches++;
             }
 
             float actualError = matches / 20_000.0f;
