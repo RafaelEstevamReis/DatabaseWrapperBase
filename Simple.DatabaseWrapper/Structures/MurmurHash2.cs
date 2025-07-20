@@ -9,16 +9,20 @@ namespace Simple.DatabaseWrapper.Structures
     /// </summary>
     public class MurmurHash2
     {
+        const uint m = 0x5bd1e995;
+        const int r = 24;
         public static uint Hash(string data)
         {
             return Hash(Encoding.UTF8.GetBytes(data));
+        }
+        public static uint Hash(string data, uint seed)
+        {
+            return Hash(Encoding.UTF8.GetBytes(data), seed);
         }
         public static uint Hash(byte[] data)
         {
             return Hash(data, 0xc58f1a7a);
         }
-        const uint m = 0x5bd1e995;
-        const int r = 24;
 
         public static uint Hash(byte[] data, uint seed)
         {
@@ -63,5 +67,15 @@ namespace Simple.DatabaseWrapper.Structures
 
             return h;
         }
+
+        private readonly uint seed;
+        public MurmurHash2(uint seed)
+        {
+            this.seed = seed;
+        }
+
+        public uint ComputeHash(byte[] data) => Hash(data, seed);
+
+
     }
 }
