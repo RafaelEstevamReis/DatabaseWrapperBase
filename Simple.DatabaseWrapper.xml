@@ -264,7 +264,6 @@
             <summary>
             Serialize to a binary file
             </summary>
-            <param name="filePath"></param>
         </member>
         <member name="M:Simple.DatabaseWrapper.Structures.BloomFilter.LoadFromFile(System.String)">
             <summary>
