@@ -101,8 +101,11 @@ public static class CsvParser
     /// <param name="delimiter">Delimiter char to use</param>
     public static IEnumerable<string[]> ParseCsvFile(string filePath, Encoding? encoding = null, char quote = '"', char delimiter = ',')
     {
-        using var sr = new StreamReader(filePath, encoding ?? Encoding.UTF8);
-        return ParseCsv(sr, quote, delimiter);
+        using var reader = new StreamReader(filePath, encoding ?? Encoding.UTF8);
+        foreach (var row in ParseCsv(reader, quote, delimiter))
+        {
+            yield return row;
+        }
     }
     /// <summary>
     /// Parses a CSV file into an Enumerable (rows) of string[] (columns)

@@ -1,4 +1,5 @@
 ﻿using Simple.DatabaseWrapper.Helpers;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -29,6 +30,27 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests
             Assert.Equal(0, result[2][2].Length);
             // Row 4
             Assert.Contains("\n", result[3][2]);
+        }
+        [Fact]
+        public void Parse_File()
+        {
+            string content = "Name,Age,Description\r\nJohn,30,\"Software Engineer, Senior\"\r\n,,\r\nJane,25,\"Data Scientist\r\nwith multiple projects\"";
+            var temp = Path.GetTempFileName();
+            File.WriteAllText(temp, content);
+
+            var result = CsvParser.ParseCsvFile(temp).ToArray();
+            Assert.NotNull(result);
+
+            Assert.Equal(4, result.Length);
+            // Row 1
+            Assert.Equal(4, result[1][0].Length);
+            Assert.Contains(",", result[1][2]);
+            // Row 3
+            Assert.Equal(0, result[2][2].Length);
+            // Row 4
+            Assert.Contains("\n", result[3][2]);
+
+            File.Delete(temp);
         }
     }
 }
