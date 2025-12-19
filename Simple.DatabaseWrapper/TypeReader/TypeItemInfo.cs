@@ -48,12 +48,19 @@ namespace Simple.DatabaseWrapper.TypeReader
             else propertyInfo.SetValue(Object, Value);
         }
 
-        public T GetAttribute<T>(ColumnAttributes attribute)  
-            where T: Attribute
+        public T GetAttribute<T>(ColumnAttributes attribute)
+            where T : Attribute
         {
             return DBAttributes.Where(a => a.ColumnAttributes == attribute)
                                .Select(a => a.Attribute as T)
                                .FirstOrDefault();
+        }
+        public T[] GetAttributes<T>(ColumnAttributes attribute)
+            where T : Attribute
+        {
+            return DBAttributes.Where(a => a.ColumnAttributes == attribute)
+                               .Select(a => a.Attribute as T)
+                               .ToArray();
         }
 
         public static TypeItemInfo[] FromType(Type type)

@@ -95,6 +95,19 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests
         public int P6 { get; set; }
     }
 
+    public class TestMultiIndex
+    {
+        [Key]
+        public int P1 { get; set; }
+        [PrimaryKey]
+        public int P2 { get; set; }
+        [Index("ixTestMultiIndex1_A")]
+        [Index("ixTestMultiIndex2")]
+        public int P3 { get; set; }
+        [Index("ixTestMultiIndex1_B")]
+        public string P4 { get; set; }
+    }
+
     public class TestMyAttributes
     {
         // Key is Sealed

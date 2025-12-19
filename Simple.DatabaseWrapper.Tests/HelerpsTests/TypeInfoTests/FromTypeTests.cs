@@ -122,6 +122,35 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             Assert.Equal(15, (tr.Items[5].DBAttributes[0].Attribute as DefaultValueAttribute).DefaultValue);
         }
 
+
+        [Fact]
+        public void FromType_TestMultiIndex()
+        {
+            var tr = TypeInfo.FromType<TestMultiIndex>();
+            Assert.Equal("TestMultiIndex", tr.TypeName);
+
+            Assert.Equal(4, tr.Items.Length);
+
+            Assert.Single(tr.Items[0].DBAttributes);
+            Assert.Equal(ColumnAttributes.PrimaryKey, tr.Items[0].DBAttributes[0].ColumnAttributes);
+            Assert.IsType<KeyAttribute>(tr.Items[0].DBAttributes[0].Attribute);
+
+            Assert.Single(tr.Items[1].DBAttributes);
+            Assert.Equal(ColumnAttributes.PrimaryKey, tr.Items[1].DBAttributes[0].ColumnAttributes);
+            Assert.IsType<PrimaryKeyAttribute>(tr.Items[1].DBAttributes[0].Attribute);
+
+            Assert.Equal(2, tr.Items[2].DBAttributes.Length);
+            Assert.Equal(ColumnAttributes.Indexed, tr.Items[2].DBAttributes[0].ColumnAttributes);
+            Assert.Equal(ColumnAttributes.Indexed, tr.Items[2].DBAttributes[1].ColumnAttributes);
+            Assert.IsType<IndexAttribute>(tr.Items[2].DBAttributes[0].Attribute);
+
+            Assert.Single(tr.Items[3].DBAttributes);
+            Assert.Equal(ColumnAttributes.Indexed, tr.Items[3].DBAttributes[0].ColumnAttributes);
+            Assert.IsType<IndexAttribute>(tr.Items[3].DBAttributes[0].Attribute);
+
+        }
+
+
         [Fact]
         public void FromType_MyAttributesCheck()
         {
