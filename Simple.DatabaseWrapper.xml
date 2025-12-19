@@ -46,7 +46,17 @@
             Index Name
             </summary>
         </member>
+        <member name="P:Simple.DatabaseWrapper.Attributes.IndexAttribute.ColumnOrder">
+            <summary>
+            Order or column on index
+            </summary>
+        </member>
         <member name="M:Simple.DatabaseWrapper.Attributes.IndexAttribute.#ctor(System.String)">
+            <summary>
+            Defines an index
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Attributes.IndexAttribute.#ctor(System.String,System.Int32)">
             <summary>
             Defines an index
             </summary>
