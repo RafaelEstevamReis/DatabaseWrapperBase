@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simple.DatabaseWrapper.TypeReader;
+using System;
 
 namespace Simple.DatabaseWrapper.Interfaces
 {
@@ -12,6 +13,7 @@ namespace Simple.DatabaseWrapper.Interfaces
         bool AllowNulls { get; set; }
         object DefaultValue { get; set; }
         string[] Indexes { get; set; }
+        AttributeInfo[] Attributes { get; set; }
 
         string ExportColumnDefinitionAsStatement();
         string ExportAddColumnAsStatement();
