@@ -17,5 +17,6 @@
         Indexed,
 
         Ignore,
+        Other,
     }
 }

@@ -5,6 +5,7 @@ namespace Simple.DatabaseWrapper.Attributes
     /// <summary>
     /// Specify that this column has AutoIncrement
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class AutoIncrementAttribute : Attribute
     { }
 }
