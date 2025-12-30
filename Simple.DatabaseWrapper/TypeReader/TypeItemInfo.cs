@@ -123,7 +123,7 @@ namespace Simple.DatabaseWrapper.TypeReader
                 {
                     yield return new AttributeInfo(ColumnAttributes.NotNull, att);
                 }
-                // Others
+                // Other Column' attribute
                 else if (att is DefaultValueAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.DefaultValue, att);
@@ -147,6 +147,15 @@ namespace Simple.DatabaseWrapper.TypeReader
                 else if (att is AutoIncrementAttribute)
                 {
                     yield return new AttributeInfo(ColumnAttributes.AutoIncrement, att);
+                }
+                // Other Attribtes
+                else if (att is EnumPolicyAttribute)
+                {
+                    yield return new AttributeInfo(ColumnAttributes.Other, att);
+                }
+                else
+                {
+                    yield return new AttributeInfo(ColumnAttributes.Other, att);
                 }
             }
         }
