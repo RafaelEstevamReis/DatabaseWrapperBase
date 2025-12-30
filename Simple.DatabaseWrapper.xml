@@ -30,6 +30,37 @@
             </summary>
             <param name="defaultValue">Default value</param>
         </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute">
+            <summary>
+            Specify enum handling policy
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.Policies">
+            <summary>
+            Available policies
+            </summary>
+        </member>
+        <member name="F:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.Policies.AsNumber">
+            <summary>
+            Should be stored as number
+            </summary>
+        </member>
+        <member name="F:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.Policies.AsText">
+            <summary>
+            Should be stored as text
+            </summary>
+        </member>
+        <member name="P:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.Policy">
+            <summary>
+            Current Policy
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.#ctor(Simple.DatabaseWrapper.Attributes.EnumPolicyAttribute.Policies)">
+            <summary>
+            Creates a new instance
+            </summary>
+            <param name="policy">Policy to be used</param>
+        </member>
         <member name="T:Simple.DatabaseWrapper.Attributes.IgnoreAttribute">
             <summary>
             Specify that this column should be ignored
