@@ -6,7 +6,7 @@ namespace Simple.DatabaseWrapper.Attributes
     /// Specify that an index must be created for this column
     /// All columns with same indexName will be indexed together
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class IndexAttribute : Attribute
     {
         /// <summary>

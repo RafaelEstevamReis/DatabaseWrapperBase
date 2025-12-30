@@ -5,7 +5,7 @@ namespace Simple.DatabaseWrapper.Attributes
     /// <summary>
     /// Specify default value for this column
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class DefaultValueAttribute : Attribute
     {
         /// <summary>

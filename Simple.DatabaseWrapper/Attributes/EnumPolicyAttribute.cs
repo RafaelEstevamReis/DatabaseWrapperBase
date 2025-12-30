@@ -5,7 +5,7 @@ namespace Simple.DatabaseWrapper.Attributes
     /// <summary>
     /// Specify enum handling policy
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class EnumPolicyAttribute : Attribute
     {
         /// <summary>

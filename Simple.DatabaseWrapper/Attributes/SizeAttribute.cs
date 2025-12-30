@@ -5,7 +5,7 @@ namespace Simple.DatabaseWrapper.Attributes
     /// <summary>
     /// Specify size for this column
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class SizeAttribute : Attribute
     {
         /// <summary>
