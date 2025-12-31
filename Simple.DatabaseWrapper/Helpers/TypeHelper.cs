@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Simple.DatabaseWrapper.Attributes;
 using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
@@ -55,6 +56,15 @@ namespace Simple.DatabaseWrapper.Helpers
             }
             if (objVal is Color color) return new byte[] { color.A, color.R, color.G, color.B };
             if (objVal is TimeSpan span) return span.Ticks;
+
+            if (info.Type.IsEnum)
+            {
+                var policy = info.GetAttribute<EnumPolicyAttribute>(ColumnAttributes.Other);
+                if (policy != null && policy.Policy == EnumPolicyAttribute.Policies.AsText)
+                {
+                    return ((Enum)objVal).ToString();
+                }
+            }
 
             return objVal;
         }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Simple.DatabaseWrapper.Attributes;
 using Simple.DatabaseWrapper.TypeReader;
 using Xunit;
@@ -79,11 +80,13 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             Assert.Equal(property, typeItemInfo.ItemType);
             Assert.Equal(itemName, typeItemInfo.Name);
             Assert.Equal(typeName, typeItemInfo.Type.Name);
-            Assert.Equal(attributeCount, typeItemInfo.DBAttributes.Length);
+
+            var attr = typeItemInfo.DBAttributes.Where(o => o.ColumnAttributes == attribute).ToArray();
+            Assert.Equal(attributeCount, attr.Length);
 
             if (attributeCount > 0)
             {
-                Assert.Equal(attribute, typeItemInfo.DBAttributes[0].ColumnAttributes);
+                Assert.Equal(attribute, attr[0].ColumnAttributes);
             }
         }
 
@@ -93,7 +96,7 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             var tr = TypeInfo.FromType<TestAttributes>();
             Assert.Equal("TestAttributes", tr.TypeName);
 
-            Assert.Equal(6, tr.Items.Length);
+            Assert.Equal(8, tr.Items.Length);
 
             Assert.Single(tr.Items[0].DBAttributes);
             Assert.Equal(ColumnAttributes.PrimaryKey, tr.Items[0].DBAttributes[0].ColumnAttributes);
@@ -118,6 +121,14 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests.TypeReaderTests
             Assert.Single(tr.Items[5].DBAttributes);
             Assert.Equal(ColumnAttributes.DefaultValue, tr.Items[5].DBAttributes[0].ColumnAttributes);
             Assert.IsType<DefaultValueAttribute>(tr.Items[5].DBAttributes[0].Attribute);
+
+            Assert.Single(tr.Items[6].DBAttributes);
+            Assert.Equal(ColumnAttributes.Other, tr.Items[6].DBAttributes[0].ColumnAttributes);
+            Assert.IsType<EnumPolicyAttribute>(tr.Items[6].DBAttributes[0].Attribute);
+
+            Assert.Single(tr.Items[7].DBAttributes);
+            Assert.Equal(ColumnAttributes.Other, tr.Items[7].DBAttributes[0].ColumnAttributes);
+            Assert.IsType<EnumPolicyAttribute>(tr.Items[7].DBAttributes[0].Attribute);
 
             Assert.Equal(15, (tr.Items[5].DBAttributes[0].Attribute as DefaultValueAttribute).DefaultValue);
         }

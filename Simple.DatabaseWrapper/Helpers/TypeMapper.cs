@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Drawing;
+using Microsoft.VisualBasic;
 using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
@@ -56,7 +57,27 @@ namespace Simple.DatabaseWrapper.Helpers
                     var argb = (byte[])reader.GetValue(ColumnIndex);
                     objVal = Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);
                 }
-                else if (type.IsEnum) objVal = reader.GetInt32(ColumnIndex);
+                else if (type.IsEnum)
+                {
+                    objVal = reader.GetValue(ColumnIndex);
+
+                    if (objVal is string strVal)
+                    {
+#if NET6_0_OR_GREATER
+                        if (Enum.TryParse(type, strVal, true, out object eObj)) return eObj;
+                        return 0;
+#elif NETSTANDARD2_1_OR_GREATER
+                        if (Enum.TryParse(type, strVal, out object eObj)) return eObj;
+                        return 0;
+#else
+                        return Enum.Parse(type, strVal);
+#endif
+                    }
+                    else
+                    {
+                        return Convert.ToInt32(objVal);
+                    }
+                }
                 else objVal = reader.GetValue(ColumnIndex);
             }
             return objVal;

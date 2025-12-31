@@ -53,6 +53,7 @@ namespace Simple.DatabaseWrapper.TypeReader
         {
             return DBAttributes.Where(a => a.ColumnAttributes == attribute)
                                .Select(a => a.Attribute as T)
+                               .Where(o => o is not null)
                                .FirstOrDefault();
         }
         public T[] GetAttributes<T>(ColumnAttributes attribute)
@@ -60,6 +61,7 @@ namespace Simple.DatabaseWrapper.TypeReader
         {
             return DBAttributes.Where(a => a.ColumnAttributes == attribute)
                                .Select(a => a.Attribute as T)
+                               .Where(o => o is not null)
                                .ToArray();
         }
 

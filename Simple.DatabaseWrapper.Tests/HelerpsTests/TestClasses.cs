@@ -81,6 +81,19 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests
 
     public class TestAttributes
     {
+        public enum MyIntEnum
+        {
+            Zero = 0,
+            One = 1,
+            Two = 2,
+        }
+        public enum MyTextEnum
+        {
+            Apple,
+            Banana,
+            Orange
+        }
+
         [Key]
         public int P1 { get; set; }
         [PrimaryKey]
@@ -93,6 +106,10 @@ namespace Simple.DatabaseWrapper.Tests.HelerpsTests
         public string P5 { get; set; }
         [DefaultValue(15)]
         public int P6 { get; set; }
+        [EnumPolicy(EnumPolicyAttribute.Policies.AsNumber)]
+        public MyIntEnum IntEnum { get; set; }
+        [EnumPolicy(EnumPolicyAttribute.Policies.AsText)]
+        public MyTextEnum TextEnum { get; set; }
     }
 
     public class TestMultiIndex
