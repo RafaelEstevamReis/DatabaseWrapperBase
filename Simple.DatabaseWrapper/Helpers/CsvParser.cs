@@ -137,6 +137,71 @@ public static class CsvParser
     /// <param name="converter">Mapper function</param>
     public static IEnumerable<T> As<T>(this IEnumerable<string[]> rows, Func<string[], T> converter)
     {
-        foreach(var row in rows) yield return converter(row);
+        foreach (var row in rows) yield return converter(row);
     }
+
+#if NET6_0_OR_GREATER || NET48_OR_GREATER
+    /// <summary>
+    /// Parse Zipped CSV file and get it's rows
+    /// </summary>
+    /// <param name="zipPath">Zip file path</param>
+    /// <param name="entryFilter">Zip Entry filter</param>
+    /// <param name="fileRowAction">Action called for each row of each file</param>
+    /// <param name="encoding">Encoding to be used to parse</param>
+    /// <param name="quote">Quote char to be used to parse</param>
+    /// <param name="delimiter">Delimiter char to be used to parse</param>
+    public static void GetZippedCsvRows(string zipPath, Func<System.IO.Compression.ZipArchiveEntry, bool> entryFilter, Action<string, string[]> fileRowAction, Encoding encoding = null, char delimiter = ',', char quote = '"')
+    {
+        using var fs = File.OpenRead(zipPath);
+        using var archive = new System.IO.Compression.ZipArchive(fs, System.IO.Compression.ZipArchiveMode.Read);
+
+        foreach (var entry in archive.Entries)
+        {
+            if (!entryFilter(entry)) continue;
+
+            using var zipStream = entry.Open();
+            using var reader = new StreamReader(zipStream, encoding ?? Encoding.UTF8);
+            var rows = ParseCsv(reader, quote, delimiter);
+
+            foreach (var row in rows)
+            {
+                fileRowAction(entry.FullName, row);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Parse Zipped CSV file and get it's rows
+    /// </summary>
+    /// <param name="zipPath">Zip file path</param>
+    /// <param name="fullNameFilter">Zip Entry FullName filter</param>
+    /// <param name="fileRowAction">Action called for each row of each file</param>
+    /// <param name="encoding">Encoding to be used to parse</param>
+    /// <param name="quote">Quote char to be used to parse</param>
+    /// <param name="delimiter">Delimiter char to be used to parse</param>
+    public static void GetZippedCsvRows(string zipPath, Func<string, bool> fullNameFilter, Action<string, string[]> fileRowAction, Encoding encoding = null, char delimiter = ',', char quote = '"')
+    {
+        GetZippedCsvRows(zipPath,
+                         e => fullNameFilter(e.FullName),
+                         fileRowAction,
+                         encoding, delimiter, quote);
+    }
+
+    /// <summary>
+    /// Parse all CSV Zipped entries and get it's rows
+    /// </summary>
+    /// <param name="zipPath">Zip file path</param>
+    /// <param name="fileRowAction">Action called for each row of each file</param>
+    /// <param name="encoding">Encoding to be used to parse</param>
+    /// <param name="quote">Quote char to be used to parse</param>
+    /// <param name="delimiter">Delimiter char to be used to parse</param>
+    public static void GetZippedCsvRows(string zipPath, Action<string, string[]> fileRowAction, Encoding encoding = null, char delimiter = ',', char quote = '"')
+    {
+        GetZippedCsvRows(zipPath,
+                         e => e.Name.Length > 0, // Only files
+                         fileRowAction,
+                         encoding, delimiter, quote);
+    }
+#endif
+
 }
