@@ -22,6 +22,7 @@ namespace Simple.DatabaseWrapper.Helpers
             if (typeT == typeof(DateTime)) return true;
             if (typeT == typeof(TimeSpan)) return true;
             if (typeT == typeof(Guid)) return true;
+            if (typeT == typeof(IdGeneration.Id)) return true;
             // Drawing
             if (typeT == typeof(Color)) return true;
 
@@ -56,6 +57,7 @@ namespace Simple.DatabaseWrapper.Helpers
             }
             if (objVal is Color color) return new byte[] { color.A, color.R, color.G, color.B };
             if (objVal is TimeSpan span) return span.Ticks;
+            if (objVal is IdGeneration.Id id64) return id64.Value;
 
             if (info.Type.IsEnum)
             {

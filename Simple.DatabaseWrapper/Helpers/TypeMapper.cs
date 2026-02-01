@@ -52,6 +52,7 @@ namespace Simple.DatabaseWrapper.Helpers
                 else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?)) objVal = TimeSpan.FromTicks(reader.GetInt64(ColumnIndex));
                 else if (type == typeof(byte[])) objVal = (byte[])reader.GetValue(ColumnIndex);
                 else if (type == typeof(Guid) || type == typeof(Guid?)) objVal = reader.GetGuid(ColumnIndex);
+                else if (type == typeof(IdGeneration.Id) || type == typeof(IdGeneration.Id?)) objVal = reader.GetInt64(ColumnIndex);
                 else if (type == typeof(Color) || type == typeof(Color?))
                 {
                     var argb = (byte[])reader.GetValue(ColumnIndex);

@@ -266,6 +266,56 @@
             Name starts with '&lt;&gt;' or 'VB$'
             </summary>
         </member>
+        <member name="T:Simple.DatabaseWrapper.IdGeneration.Id">
+            <summary>
+            Represets a 64bit unique identifier
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.Id.#ctor(System.Int64)">
+            <summary>
+            Represets a 64bit unique identifier
+            </summary>
+        </member>
+        <member name="P:Simple.DatabaseWrapper.IdGeneration.Id.Value">
+            <summary>
+            Identifier represented value
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.Id.GetWorkerId">
+            <summary>
+            Get the WokerId used to generate this Id
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.Id.ExtractDateTimeUtc">
+            <summary>
+            Get the Timestamp used to generate this Id
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.Id.op_Implicit(Simple.DatabaseWrapper.IdGeneration.Id)~System.Int64">
+            <summary>
+            Implicit conversion for Long
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.Id.op_Implicit(System.Int64)~Simple.DatabaseWrapper.IdGeneration.Id">
+            <summary>
+            Implicit conversion from Long
+            </summary>
+        </member>
+        <member name="T:Simple.DatabaseWrapper.IdGeneration.IdGenerator">
+            <summary>
+            Implements a Snowflake like Id Generator
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.IdGenerator.#ctor(System.Int64)">
+            <summary>
+            Creates a new generator fot a WorkerID
+            </summary>
+        </member>
+        <member name="M:Simple.DatabaseWrapper.IdGeneration.IdGenerator.GetNextId">
+            <summary>
+            Generates a new ID
+            </summary>
+        </member>
         <member name="M:Simple.DatabaseWrapper.Structures.Bloom`1.#ctor(Simple.DatabaseWrapper.Structures.IHashFunction,System.Int32)">
             <summary>
             Creates a simple bloom filter implementation using BloomHash_GetHashCode as second hash
