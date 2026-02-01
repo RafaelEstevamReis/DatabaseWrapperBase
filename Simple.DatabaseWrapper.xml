@@ -303,7 +303,7 @@
         </member>
         <member name="T:Simple.DatabaseWrapper.IdGeneration.IdGenerator">
             <summary>
-            Implements a Snowflake like Id Generator
+            Implements a simple Snowflake like Id Generator
             </summary>
         </member>
         <member name="M:Simple.DatabaseWrapper.IdGeneration.IdGenerator.#ctor(System.Int64)">

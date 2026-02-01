@@ -2,7 +2,7 @@
 
 internal class GeneratorConstants
 {
-    public const long EPOCH = 1760000000000L;
+    public const long EPOCH = 1770000000000L;
 
     public const int WORKER_BITS = 10;
     public const int SEQUENCE_BITS = 12;

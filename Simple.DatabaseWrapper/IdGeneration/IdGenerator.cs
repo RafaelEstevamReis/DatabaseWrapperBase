@@ -3,13 +3,19 @@
 using System;
 
 /// <summary>
-/// Implements a Snowflake like Id Generator
+/// Implements a simple Snowflake like Id Generator
 /// </summary>
 public class IdGenerator
 {
     private readonly long workerId;
     private long sequence;
-    private object lockObject;
+
+#if NET9_0_OR_GREATER
+    private readonly System.Threading.Lock lockObject;
+#else
+    private readonly object lockObject;
+#endif
+
 
     /// <summary>
     /// Creates a new generator fot a WorkerID
@@ -17,11 +23,13 @@ public class IdGenerator
     public IdGenerator(long workerId)
     {
         if (workerId <= 0 || workerId > GeneratorConstants.MAX_WORKER)
+        {
             throw new ArgumentOutOfRangeException(nameof(workerId), $"Worker ID must be between 1 and {GeneratorConstants.MAX_WORKER}");
+        }
 
         this.workerId = workerId;
         sequence = 0;
-        lockObject = new object();
+        lockObject = new();
     }
 
     /// <summary>
@@ -31,14 +39,19 @@ public class IdGenerator
 
     private long next()
     {
-        long now = CurrentMillis();
         long thisSequence;
+
+#if NET9_0_OR_GREATER
+        using (lockObject.EnterScope())
+#else
         lock (lockObject)
+#endif
         {
             sequence = ++sequence % GeneratorConstants.MAX_SEQUENCE;
             thisSequence = sequence;
         }
 
+        long now = CurrentMillis();
         return now - GeneratorConstants.EPOCH << GeneratorConstants.TS_SHIFT
              | workerId << GeneratorConstants.WORKER_SHIFT
              | thisSequence;
