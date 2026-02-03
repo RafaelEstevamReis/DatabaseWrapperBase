@@ -304,6 +304,7 @@
         <member name="T:Simple.DatabaseWrapper.IdGeneration.IdGenerator">
             <summary>
             Implements a simple Snowflake like Id Generator
+            Trade-off: Uniqueness and speed it more important than timestamp accuracy
             </summary>
         </member>
         <member name="M:Simple.DatabaseWrapper.IdGeneration.IdGenerator.#ctor(System.Int64)">
