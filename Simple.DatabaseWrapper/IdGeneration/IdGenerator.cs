@@ -4,6 +4,7 @@ using System;
 
 /// <summary>
 /// Implements a simple Snowflake like Id Generator
+/// Trade-off: Uniqueness and speed it more important than timestamp accuracy
 /// </summary>
 public class IdGenerator
 {
@@ -51,14 +52,14 @@ public class IdGenerator
             thisSequence = sequence;
         }
 
-        long now = CurrentMillis();
+        long now = currentMillis();
         return now - GeneratorConstants.EPOCH << GeneratorConstants.TS_SHIFT
              | workerId << GeneratorConstants.WORKER_SHIFT
              | thisSequence;
 
     }
 
-    private long CurrentMillis()
+    private static long currentMillis()
     {
         return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
