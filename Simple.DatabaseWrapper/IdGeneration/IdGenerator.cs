@@ -53,7 +53,7 @@ public class IdGenerator
         }
 
         long now = currentMillis();
-        return now - GeneratorConstants.EPOCH << GeneratorConstants.TS_SHIFT
+        return (now - GeneratorConstants.EPOCH) << GeneratorConstants.TS_SHIFT
              | workerId << GeneratorConstants.WORKER_SHIFT
              | thisSequence;
 
