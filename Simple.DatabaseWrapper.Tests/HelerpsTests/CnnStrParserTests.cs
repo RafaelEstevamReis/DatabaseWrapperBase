@@ -1,6 +1,6 @@
 ﻿namespace Simple.DatabaseWrapper.Tests.HelerpsTests;
 
-using Simple.DatabaseWrapper.Helpers;
+using Simple.DatabaseWrapper.Parsers;
 using Xunit;
 
 public class ConnectionStringParserTests

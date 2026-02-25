@@ -1,9 +1,10 @@
-﻿namespace Simple.DatabaseWrapper.Helpers;
+﻿namespace Simple.DatabaseWrapper.Parsers;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 public static class CsvParser
 {
@@ -14,7 +15,7 @@ public static class CsvParser
     /// <param name="encoding">File encoding to use</param>
     /// <param name="quote">Quote char to use</param>
     /// <param name="delimiter">Delimiter char to use</param>
-    public static IEnumerable<string[]> ParseCsvFile(string filePath, Encoding? encoding = null, char quote = '"', char delimiter = ',')
+    public static IEnumerable<string[]> ParseCsvFile(string filePath, Encoding encoding = null, char quote = '"', char delimiter = ',')
     {
         using var reader = new StreamReader(filePath, encoding ?? Encoding.UTF8);
         foreach (var row in ParseCsv(reader, quote, delimiter))
@@ -128,6 +129,39 @@ public static class CsvParser
             yield return fields.ToArray();
         }
     }
+
+#if !NET20
+
+    /// <summary>
+    /// Parses a CSV file and gets it's rows
+    /// </summary>
+    /// <param name="fs">CSV Filestream for reading</param>
+    /// <param name="rowsAction">Action with each CSV row for processing</param>
+    /// <param name="encoding">File Encoding</param>
+    /// <param name="quote">Quote char</param>
+    /// <param name="delimiter">Delimiter char</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
+    /// <exception cref="OperationCanceledException">The token has had cancellation requested.</exception>
+    public static void GetCsvRows(FileStream fs, Action<object> rowsAction, Encoding encoding = null, char quote = '"', char delimiter = ',', CancellationToken? cancellationToken = null)
+    {
+        using var reader = new StreamReader(fs, encoding ?? Encoding.UTF8);
+        long count = 0;
+        foreach (var row in ParseCsv(reader, quote, delimiter))
+        {
+            cancellationToken?.ThrowIfCancellationRequested();
+
+            count++;
+            var progress = 100 * ((float)fs.Position / fs.Length);
+            rowsAction(new
+            {
+                Row = row,
+                RowNumber = count,
+                Progress = progress
+            });
+        }
+    }
+
+#endif
 
     /// <summary>
     /// Converts CSV rows to T instance

@@ -1,4 +1,4 @@
-﻿namespace Simple.DatabaseWrapper.Helpers;
+﻿namespace Simple.DatabaseWrapper.Parsers;
 
 using System;
 using System.Collections.Generic;

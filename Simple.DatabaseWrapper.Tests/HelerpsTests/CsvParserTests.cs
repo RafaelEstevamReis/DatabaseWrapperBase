@@ -1,4 +1,4 @@
-﻿using Simple.DatabaseWrapper.Helpers;
+﻿using Simple.DatabaseWrapper.Parsers;
 using System.IO;
 using System.Linq;
 using Xunit;
