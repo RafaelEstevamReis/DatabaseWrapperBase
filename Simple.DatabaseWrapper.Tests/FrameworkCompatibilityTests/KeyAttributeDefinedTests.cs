@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Simple.DatabaseWrapper.Tests.FrameworkCompatibilityTests;
 
-namespace Simple.DatabaseWrapper.Tests.FrameworkCompatibilityTests
+using System.ComponentModel.DataAnnotations;
+
+public class KeyAttributeDefinedTests
 {
-    public class KeyAttributeDefinedTests
-    {
-        [Key]
-        public int prop { get; set; }
-    }
+    [Key]
+    public int prop { get; set; }
 }

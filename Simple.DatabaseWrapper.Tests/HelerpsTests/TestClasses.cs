@@ -1,153 +1,152 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Simple.DatabaseWrapper.Tests.HelerpsTests;
+
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Simple.DatabaseWrapper.Attributes;
 
-namespace Simple.DatabaseWrapper.Tests.HelerpsTests
+public class TestClassProps
 {
-    public class TestClassProps
+    [Key]
+    public int P1 { get; set; }
+    [PrimaryKey]
+    public int P2 { get; set; }
+    [Unique]
+    public int P3 { get; set; }
+    [AllowNull]
+    public string P4 { get; set; }
+    [NotNull]
+    public string P5 { get; set; }
+    [DefaultValue(20)]
+    public int P6 { get; set; }
+    [XmlIgnore]
+    public int P7 { get; set; }
+    public int P8 { get; set; }
+    public int PGet { get; }
+    public int PSet { set { _ = value; } }
+}
+public class TestClassFields
+{
+    [Key]
+    public int P1;
+    [PrimaryKey]
+    public int P2;
+    [Unique]
+    public int P3;
+    [AllowNull]
+    public string P4;
+    [NotNull]
+    public string P5;
+    [DefaultValue(20)]
+    public int P6;
+    [XmlIgnore]
+    public int P7;
+    public int P8;
+}
+public struct TestStructProps
+{
+    [Key]
+    public int P1 { get; set; }
+    [PrimaryKey]
+    public int P2 { get; set; }
+    [Unique]
+    public int P3 { get; set; }
+    [AllowNull]
+    public string P4 { get; set; }
+    [NotNull]
+    public string P5 { get; set; }
+    [DefaultValue(20)]
+    public int P6 { get; set; }
+    [XmlIgnore]
+    public int P7 { get; set; }
+    public int P8 { get; set; }
+}
+public struct TestStructFields
+{
+    [Key]
+    public int P1;
+    [PrimaryKey]
+    public int P2;
+    [Unique]
+    public int P3;
+    [AllowNull]
+    public string P4;
+    [NotNull]
+    public string P5;
+    [DefaultValue(20)]
+    public int P6;
+    [XmlIgnore]
+    public int P7;
+    public int P8;
+}
+
+public class TestAttributes
+{
+    public enum MyIntEnum
     {
-        [Key]
-        public int P1 { get; set; }
-        [PrimaryKey]
-        public int P2 { get; set; }
-        [Unique]
-        public int P3 { get; set; }
-        [AllowNull]
-        public string P4 { get; set; }
-        [NotNull]
-        public string P5 { get; set; }
-        [DefaultValue(20)]
-        public int P6 { get; set; }
-        [XmlIgnore]
-        public int P7 { get; set; }
-        public int P8 { get; set; }
-        public int PGet { get; }
-        public int PSet { set { _ = value; } }
+        Zero = 0,
+        One = 1,
+        Two = 2,
     }
-    public class TestClassFields
+    public enum MyTextEnum
     {
-        [Key]
-        public int P1;
-        [PrimaryKey]
-        public int P2;
-        [Unique]
-        public int P3;
-        [AllowNull]
-        public string P4;
-        [NotNull]
-        public string P5;
-        [DefaultValue(20)]
-        public int P6;
-        [XmlIgnore]
-        public int P7;
-        public int P8;
-    }
-    public struct TestStructProps
-    {
-        [Key]
-        public int P1 { get; set; }
-        [PrimaryKey]
-        public int P2 { get; set; }
-        [Unique]
-        public int P3 { get; set; }
-        [AllowNull]
-        public string P4 { get; set; }
-        [NotNull]
-        public string P5 { get; set; }
-        [DefaultValue(20)]
-        public int P6 { get; set; }
-        [XmlIgnore]
-        public int P7 { get; set; }
-        public int P8 { get; set; }
-    }
-    public struct TestStructFields
-    {
-        [Key]
-        public int P1;
-        [PrimaryKey]
-        public int P2;
-        [Unique]
-        public int P3;
-        [AllowNull]
-        public string P4;
-        [NotNull]
-        public string P5;
-        [DefaultValue(20)]
-        public int P6;
-        [XmlIgnore]
-        public int P7;
-        public int P8;
+        Apple,
+        Banana,
+        Orange
     }
 
-    public class TestAttributes
-    {
-        public enum MyIntEnum
-        {
-            Zero = 0,
-            One = 1,
-            Two = 2,
-        }
-        public enum MyTextEnum
-        {
-            Apple,
-            Banana,
-            Orange
-        }
+    [Key]
+    public int P1 { get; set; }
+    [PrimaryKey]
+    public int P2 { get; set; }
+    [Unique]
+    public int P3 { get; set; }
+    [AllowNull]
+    public string P4 { get; set; }
+    [NotNull]
+    public string P5 { get; set; }
+    [DefaultValue(15)]
+    public int P6 { get; set; }
+    [EnumPolicy(EnumPolicyAttribute.Policies.AsNumber)]
+    public MyIntEnum IntEnum { get; set; }
+    [EnumPolicy(EnumPolicyAttribute.Policies.AsText)]
+    public MyTextEnum TextEnum { get; set; }
+}
 
-        [Key]
-        public int P1 { get; set; }
-        [PrimaryKey]
-        public int P2 { get; set; }
-        [Unique]
-        public int P3 { get; set; }
-        [AllowNull]
-        public string P4 { get; set; }
-        [NotNull]
-        public string P5 { get; set; }
-        [DefaultValue(15)]
-        public int P6 { get; set; }
-        [EnumPolicy(EnumPolicyAttribute.Policies.AsNumber)]
-        public MyIntEnum IntEnum { get; set; }
-        [EnumPolicy(EnumPolicyAttribute.Policies.AsText)]
-        public MyTextEnum TextEnum { get; set; }
-    }
+public class TestMultiIndex
+{
+    [Key]
+    public int P1 { get; set; }
+    [PrimaryKey]
+    public int P2 { get; set; }
+    [Index("ixTestMultiIndex1_A")]
+    [Index("ixTestMultiIndex2")]
+    public int P3 { get; set; }
+    [Index("ixTestMultiIndex1_B")]
+    public string P4 { get; set; }
+}
 
-    public class TestMultiIndex
-    {
-        [Key]
-        public int P1 { get; set; }
-        [PrimaryKey]
-        public int P2 { get; set; }
-        [Index("ixTestMultiIndex1_A")]
-        [Index("ixTestMultiIndex2")]
-        public int P3 { get; set; }
-        [Index("ixTestMultiIndex1_B")]
-        public string P4 { get; set; }
-    }
+public class TestMyAttributes
+{
+    // Key is Sealed
 
-    public class TestMyAttributes
-    {
-        // Key is Sealed
-
-        [MyPrimaryKey]
-        public int P2 { get; set; }
-        [MyUnique]
-        public int P3 { get; set; }
-        [MyAllowNull]
-        public string P4 { get; set; }
-        [MyNotNull]
-        public string P5 { get; set; }
-        [MyDefaultValue(25)]
-        public int P6 { get; set; }
-    }
+    [MyPrimaryKey]
+    public int P2 { get; set; }
+    [MyUnique]
+    public int P3 { get; set; }
+    [MyAllowNull]
+    public string P4 { get; set; }
+    [MyNotNull]
+    public string P5 { get; set; }
+    [MyDefaultValue(25)]
+    public int P6 { get; set; }
+}
 
 
-    public class MyPrimaryKeyAttribute : PrimaryKeyAttribute { }
-    public class MyUniqueAttribute : UniqueAttribute { }
-    public class MyAllowNullAttribute : AllowNullAttribute { }
-    public class MyNotNullAttribute : NotNullAttribute { }
-    public class MyDefaultValueAttribute : DefaultValueAttribute
-    {
-        public MyDefaultValueAttribute(object defaultValue) : base(defaultValue) { }
-    }
+public class MyPrimaryKeyAttribute : PrimaryKeyAttribute { }
+public class MyUniqueAttribute : UniqueAttribute { }
+public class MyAllowNullAttribute : AllowNullAttribute { }
+public class MyNotNullAttribute : NotNullAttribute { }
+public class MyDefaultValueAttribute : DefaultValueAttribute
+{
+    public MyDefaultValueAttribute(object defaultValue) : base(defaultValue) { }
 }
