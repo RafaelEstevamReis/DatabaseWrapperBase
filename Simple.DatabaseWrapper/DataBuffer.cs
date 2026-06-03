@@ -1,96 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#if NET6_0 || NET5_0 || NETCOREAPP3_1
-using System.Collections.Concurrent;
-#endif
-
 namespace Simple.DatabaseWrapper
 {
-#if NET6_0 || NET5_0 || NETCOREAPP3_1
-    /// <summary>
-    /// Bufferizes data to flush in batches.
-    /// Using ConcurrentBag (Net5 and NetCore3.1)
-    /// </summary>
-#else
-    /// <summary>
-    /// Bufferizes data to flush in batches.
-    /// Using List+Lock (Ueses ConcurrentBag on Net5 and NetCore3.1)
-    /// </summary>
-#endif
     public sealed class DataBuffer<T> : IDisposable
     {
-        /// <summary>
-        /// Ignore Nulls additions
-        /// </summary>
         public bool IgnoreNulls { get; set; } = true;
-
-        /// <summary>
-        /// Batch size
-        /// </summary>
-        public int Quantity { get; }
-        /// <summary>
-        /// Flush action
-        /// </summary>
+        public int Capacity { get; }
         public Action<IEnumerable<T>> FlushData { get; }
 
-#if NET6_0 || NET5_0 || NETCOREAPP3_1
-        readonly ConcurrentBag<T> queue = new ConcurrentBag<T>();
+        private List<T> _activeBuffer;
+
+#if NET9_0_OR_GREATER
+        private readonly System.Threading.Lock _swapLock = new();
+        private readonly System.Threading.Lock _flushLock = new();
 #else
-        readonly List<T> queue = new List<T>();
+        private readonly object _swapLock = new();
+        private readonly object _flushLock = new();
 #endif
 
-        /// <summary>
-        /// Data about this buffer
-        /// </summary>
-        public object Tag { get; set; }
-
-        /// <summary>
-        /// Creates a new buffer instance
-        /// </summary>
-        /// <param name="quantity">Batch size</param>
-        /// <param name="flushData">Flush action</param>
         public DataBuffer(int quantity, Action<IEnumerable<T>> flushData)
         {
-            Quantity = quantity;
+            Capacity = quantity > 0 ? quantity : throw new ArgumentOutOfRangeException(nameof(quantity));
             FlushData = flushData ?? throw new ArgumentNullException(nameof(flushData));
+            _activeBuffer = new List<T>(Capacity);
         }
-        /// <summary>
-        /// Adds a new value to the buffer
-        /// </summary>
+
         public void Add(T value)
         {
             if (IgnoreNulls && value is null) return;
 
-#if NET6_0 || NET5_0 || NETCOREAPP3_1
-            queue.Add(value);
-#else
-            lock (queue)
-            {
-                queue.Add(value);
-            }
-#endif
+            List<T> bufferToFlush = null;
 
-            if (queue.Count >= Quantity)
+            lock (_swapLock)
             {
-                Flush();
+                _activeBuffer.Add(value);
+
+                if (_activeBuffer.Count >= Capacity)
+                {
+                    bufferToFlush = _activeBuffer;
+                    _activeBuffer = new List<T>(Capacity);
+                }
+            }
+
+            if (bufferToFlush != null)
+            {
+                // Lock other flush threads when second buffer fills before this ends
+                lock (_flushLock)
+                {
+                    FlushData(bufferToFlush);
+                }
             }
         }
-        /// <summary>
-        /// Flushes the buffer
-        /// </summary>
+
         public void Flush()
         {
-            lock (queue)
+            List<T> bufferToFlush = null;
+
+            lock (_swapLock)
             {
-                var arr = queue.ToArray();
-                queue.Clear();
-                FlushData(arr);
+                if (_activeBuffer.Count > 0)
+                {
+                    bufferToFlush = _activeBuffer;
+                    _activeBuffer = new List<T>(Capacity);
+                }
+            }
+
+            if (bufferToFlush != null)
+            {
+                lock (_flushLock)
+                {
+                    FlushData(bufferToFlush);
+                }
             }
         }
-        /// <summary>
-        /// Disposes the object and flushes all remaining data
-        /// </summary>
+
         public void Dispose()
         {
             Flush();
