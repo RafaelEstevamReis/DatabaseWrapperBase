@@ -4,13 +4,14 @@ namespace Simple.DatabaseWrapper.Parsers;
 using System;
 using System.IO;
 
-public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote = '"') : IDisposable
+public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', char quote = '"') : IDisposable
 {
     private readonly StreamReader _reader = reader ?? throw new ArgumentNullException(nameof(reader));
     private readonly char _quote = quote;
     private readonly char _delimiter = delimiter;
 
     private char[] _buffer = new char[65536];
+    private char[] _unescapeBuffer = new char[1024];
     private int _bufferLength = 0;
     private int _bufferPos = 0;
 
@@ -30,7 +31,7 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
             // End of buffer?
             if (_bufferPos >= _bufferLength)
             {
-                int leftover = _bufferLength - rowStart;
+                var leftover = _bufferLength - rowStart;
 
                 if (leftover > 0 && fieldStart > 0)
                 {
@@ -56,7 +57,7 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
                 int read = _reader.Read(_buffer, _bufferPos, _buffer.Length - _bufferPos);
                 if (read == 0) // EOF
                 {
-                    int finalColumnLength = _bufferPos - fieldStart;
+                    var finalColumnLength = _bufferPos - fieldStart;
                     if (finalColumnLength > 0 || (FieldCount > 0 && _bufferPos == fieldStart))
                     {
                         AddColumn(fieldStart, finalColumnLength);
@@ -69,7 +70,7 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
                 _bufferLength = _bufferPos + read;
             }
 
-            char c = _buffer[_bufferPos];
+            var c = _buffer[_bufferPos];
 
             if (inQuote)
             {
@@ -98,8 +99,8 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
                 }
                 else if (c == '\n')
                 {
-                    // Windows \r
-                    int end = _bufferPos;
+                    // Windows '\r'
+                    var end = _bufferPos;
                     if (end > fieldStart && _buffer[end - 1] == '\r')
                     {
                         end--;
@@ -117,8 +118,7 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
 
     public ReadOnlySpan<char> GetSpan(int colIndex)
     {
-        if (colIndex < 0 || colIndex >= FieldCount)
-            throw new IndexOutOfRangeException($"Coluna {colIndex} não existe.");
+        if (colIndex < 0 || colIndex >= FieldCount) throw new IndexOutOfRangeException($"Coluna {colIndex} não existe.");
 
         var (offset, length) = _columns[colIndex];
         var span = new ReadOnlySpan<char>(_buffer, offset, length);
@@ -134,14 +134,45 @@ public class FastCsvReader(StreamReader reader, char delimiter = ',', char quote
     public string GetString(int colIndex)
     {
         var span = GetSpan(colIndex);
-        string text = span.ToString();
 
-        if (text.Contains(new string(_quote, 2)))
+        if (span.IsEmpty) return string.Empty;
+
+        bool hasEscaped = false;
+        for (int i = 0; i < span.Length - 1; i++)
         {
-            return text.Replace(new string(_quote, 2), _quote.ToString());
+            if (span[i] == _quote && span[i + 1] == _quote)
+            {
+                hasEscaped = true;
+                break;
+            }
         }
 
-        return text;
+        if (!hasEscaped)
+        {
+            return span.ToString();
+        }
+
+        // Checks buffer len
+        if (_unescapeBuffer.Length < span.Length)
+        {
+            Array.Resize(ref _unescapeBuffer, span.Length);
+        }
+
+        // Copy
+        int finalLength = 0;
+        for (int i = 0; i < span.Length; i++)
+        {
+            char c = span[i];
+            _unescapeBuffer[finalLength++] = c;
+
+            // Se for uma aspa e a próxima também for, pula a próxima
+            if (c == _quote && i < span.Length - 1 && span[i + 1] == _quote)
+            {
+                i++;
+            }
+        }
+
+        return new string(_unescapeBuffer, 0, finalLength);
     }
 
     private void AddColumn(int offset, int length)

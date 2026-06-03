@@ -3,6 +3,7 @@
 using Simple.DatabaseWrapper.Parsers;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -186,5 +187,47 @@ public class FastCsvReaderTests
         // Out of bounds access
         Assert.Throws<IndexOutOfRangeException>(() => reader.GetString(2));
         Assert.Throws<IndexOutOfRangeException>(() => reader.GetString(-1));
+    }
+
+    [Fact]
+    public void Read_ShouldHandleComplexMultiLineAndEmptyFields()
+    {
+        // Arrange: A highly complex CSV string combining multiple edge cases
+        string csv = "Name,Age,Description\r\nJohn,30,\"Software Engineer, Senior\"\r\n,,\r\nJane,25,\"Data Scientist\r\nwith multiple projects\"";
+        using var reader = new FastCsvReader(CreateStream(csv));
+
+        // Act & Assert
+
+        // Line 1: Header
+        Assert.True(reader.Read());
+        Assert.Equal(3, reader.FieldCount);
+        Assert.Equal("Name", reader.GetString(0));
+        Assert.Equal("Age", reader.GetString(1));
+        Assert.Equal("Description", reader.GetString(2));
+
+        // Line 2: Commas inside quotes
+        Assert.True(reader.Read());
+        Assert.Equal(3, reader.FieldCount);
+        Assert.Equal("John", reader.GetString(0));
+        Assert.Equal("30", reader.GetString(1));
+        Assert.Equal("Software Engineer, Senior", reader.GetString(2)); // Quotes stripped, comma preserved
+
+        // Line 3: Empty fields (just delimiters)
+        Assert.True(reader.Read());
+        Assert.Equal(3, reader.FieldCount);
+        Assert.Equal("", reader.GetString(0));
+        Assert.Equal("", reader.GetString(1));
+        Assert.Equal("", reader.GetString(2));
+
+        // Line 4: Line break INSIDE the quoted field + EOF without trailing \n
+        Assert.True(reader.Read());
+        Assert.Equal(3, reader.FieldCount);
+        Assert.Equal("Jane", reader.GetString(0));
+        Assert.Equal("25", reader.GetString(1));
+        // The inner \r\n must be preserved exactly as it was written, and external quotes stripped
+        Assert.Equal("Data Scientist\r\nwith multiple projects", reader.GetString(2));
+
+        // EOF
+        Assert.False(reader.Read());
     }
 }
