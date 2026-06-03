@@ -3,7 +3,14 @@ namespace Simple.DatabaseWrapper.Parsers;
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
 
+/// <summary>
+/// A Fast CSV reader
+/// </summary>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Unavailable on older frameworks")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1510:Use ArgumentNullException throw helper", Justification = "Unavailable on older frameworks")]
 public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', char quote = '"') : IDisposable
 {
     private readonly StreamReader _reader = reader ?? throw new ArgumentNullException(nameof(reader));
@@ -17,8 +24,15 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
 
     private (int Offset, int Length)[] _columns = new (int, int)[16];
 
+    /// <summary>
+    /// Current row field count
+    /// </summary>
     public int FieldCount { get; private set; }
 
+    /// <summary>
+    /// Reads next row
+    /// </summary>
+    /// <returns>True if a new row wqas read; False if EOF</returns>
     public bool Read()
     {
         FieldCount = 0;
@@ -116,21 +130,32 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
         }
     }
 
+    /// <summary>
+    /// Get a coumn span
+    /// </summary>
+    /// <exception cref="IndexOutOfRangeException">Index outside of column count</exception>
     public ReadOnlySpan<char> GetSpan(int colIndex)
     {
-        if (colIndex < 0 || colIndex >= FieldCount) throw new IndexOutOfRangeException($"Coluna {colIndex} não existe.");
+        if (colIndex < 0 || colIndex >= FieldCount)
+        {
+            throw new IndexOutOfRangeException($"Column {colIndex} does not exist");
+        }
 
         var (offset, length) = _columns[colIndex];
         var span = new ReadOnlySpan<char>(_buffer, offset, length);
 
-        if (span.Length >= 2 && span[0] == _quote && span[span.Length - 1] == _quote)
+        if (span.Length >= 2 && span[0] == _quote && span[^1] == _quote)
         {
-            span = span.Slice(1, span.Length - 2);
+            span = span[1..^1];
         }
 
         return span;
     }
 
+    /// <summary>
+    /// Get a Column string value
+    /// </summary>
+    /// <exception cref="IndexOutOfRangeException">Index outside of column count</exception>
     public string GetString(int colIndex)
     {
         var span = GetSpan(colIndex);
@@ -175,6 +200,7 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
         return new string(_unescapeBuffer, 0, finalLength);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AddColumn(int offset, int length)
     {
         if (FieldCount >= _columns.Length)
@@ -184,9 +210,84 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
         _columns[FieldCount++] = (offset, length);
     }
 
+    /// <summary>
+    /// Dispose of resources
+    /// </summary>
     public void Dispose()
     {
         _reader?.Dispose();
     }
+
+    /// <summary>
+    /// Process a zipped CSV file
+    /// Caution: Row string[] is reused internally, do not store
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Row Action should be defined</exception>
+    public static void ParseCsvZippedFile(string zipFile, Action<string, string[]> onFileRowRead, Func<string, bool> fullNameFilter, char delimiter = ',', char quote = '"', Encoding encoding = null)
+    {
+        if (onFileRowRead == null)
+        {
+            throw new ArgumentNullException(nameof(onFileRowRead));
+        }
+
+        fullNameFilter ??= fullName => !string.IsNullOrEmpty(fullName);
+
+        using var fs = File.OpenRead(zipFile);
+        using var archive = new System.IO.Compression.ZipArchive(fs, System.IO.Compression.ZipArchiveMode.Read);
+
+        foreach (var entry in archive.Entries)
+        {
+            if (string.IsNullOrEmpty(entry.Name)) continue; // Folders
+            if (!fullNameFilter(entry.FullName)) continue;
+
+            using var zipStream = entry.Open();
+            using var reader = encoding == null
+                    ? new StreamReader(zipStream)
+                    : new StreamReader(zipStream, encoding);
+
+            ParseCsvLines(reader, row => onFileRowRead(entry.FullName, row), delimiter, quote);
+        }
+    }
+
+    /// <summary>
+    /// Process a CSV file
+    /// </summary>
+    public static void ParseCsvFile(string csvFile, Action<string[]> onRowRead, char delimiter = ',', char quote = '"', Encoding encoding = null)
+    {
+        using var reader = new StreamReader(csvFile, encoding ?? Encoding.UTF8);
+        ParseCsvLines(reader, onRowRead, delimiter, quote);
+    }
+
+    /// <summary>
+    /// Process a CSV reader
+    /// Caution: Row string[] is reused internally, do not store
+    /// </summary>
+    /// <exception cref="ArgumentNullException">Row Action should be defined</exception>
+    public static void ParseCsvLines(StreamReader reader, Action<string[]> onRowRead, char delimiter = ',', char quote = '"')
+    {
+        if (onRowRead == null)
+        {
+            throw new ArgumentNullException(nameof(onRowRead));
+        }
+
+        using var csvReader = new FastCsvReader(reader, delimiter, quote);
+
+        string[] row = null;
+        while (csvReader.Read())
+        {
+            if (row == null || row.Length != csvReader.FieldCount)
+            {
+                row = new string[csvReader.FieldCount];
+            }
+
+            for (int i = 0; i < csvReader.FieldCount; i++)
+            {
+                row[i] = csvReader.GetString(i);
+            }
+
+            onRowRead(row);
+        }
+    }
+
 }
 #endif
