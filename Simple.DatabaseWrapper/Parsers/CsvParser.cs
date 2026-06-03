@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 
 public static class CsvParser
 {
@@ -142,7 +141,7 @@ public static class CsvParser
     /// <param name="delimiter">Delimiter char</param>
     /// <param name="cancellationToken">Cancellation Token</param>
     /// <exception cref="OperationCanceledException">The token has had cancellation requested.</exception>
-    public static void GetCsvRows(FileStream fs, Action<object> rowsAction, Encoding encoding = null, char quote = '"', char delimiter = ',', CancellationToken? cancellationToken = null)
+    public static void GetCsvRows(FileStream fs, Action<object> rowsAction, Encoding encoding = null, char quote = '"', char delimiter = ',', System.Threading.CancellationToken? cancellationToken = null)
     {
         using var reader = new StreamReader(fs, encoding ?? Encoding.UTF8);
         long count = 0;
