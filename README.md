@@ -1,5 +1,5 @@
 [![.NET](https://github.com/RafaelEstevamReis/DatabaseWrapperBase/actions/workflows/dotnet.yml/badge.svg)](https://github.com/RafaelEstevamReis/DatabaseWrapperBase/actions/workflows/dotnet.yml)
-[![NuGet](https://buildstats.info/nuget/Simple.DatabaseWrapper)](https://www.nuget.org/packages/Simple.DatabaseWrapper)
+[![NuGet](https://img.shields.io/nuget/v/Simple.DatabaseWrapper)](https://www.nuget.org/packages/Simple.DatabaseWrapper)
 
 
 # DatabaseWrapperBase
