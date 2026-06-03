@@ -18,7 +18,7 @@ public class FastCsvReaderTests
     [Fact]
     public void Read_ShouldParseSimpleCsvCorrectly()
     {
-        string csv = "Id,Name,Age\n1,John,30\n2,Mary,25";
+        var csv = "Id,Name,Age\n1,John,30\n2,Mary,25";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         // Line 1 (Header)
@@ -48,7 +48,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleInternalQuotesAndDelimiters()
     {
         // Field 2 has a comma INSIDE the quotes. It should not split the column.
-        string csv = "1,\"Doe, John\",30";
+        var csv = "1,\"Doe, John\",30";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -62,7 +62,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleInternallyEscapedQuotes()
     {
         // Original CSV: 1,"John ""The Boss"" Doe",30
-        string csv = "1,\"John \"\"The Boss\"\" Doe\",30";
+        var csv = "1,\"John \"\"The Boss\"\" Doe\",30";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -77,7 +77,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleEmptyFields()
     {
         // CSV: a,,c,
-        string csv = "a,,c,";
+        var csv = "a,,c,";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -92,7 +92,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleCustomDelimiters()
     {
         // CSV separated by Semicolon (;)
-        string csv = "1;Peter;Active";
+        var csv = "1;Peter;Active";
         using var reader = new FastCsvReader(CreateStream(csv), delimiter: ';');
 
         Assert.True(reader.Read());
@@ -106,7 +106,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleMixedLineEndings()
     {
         // Mixing \n (Linux) and \r\n (Windows)
-        string csv = "Line1\nLine2\r\nLine3";
+        var csv = "Line1\nLine2\r\nLine3";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -123,7 +123,7 @@ public class FastCsvReaderTests
     public void Read_ShouldHandleEofWithoutNewLine()
     {
         // The file ends strictly after "c", without a trailing \n (Abrupt EOF)
-        string csv = "a,b,c";
+        var csv = "a,b,c";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -159,7 +159,7 @@ public class FastCsvReaderTests
     [Fact]
     public void GetSpan_ShouldReturnSpanWithoutAllocatingString()
     {
-        string csv = "Test1,\"Test2\"";
+        var csv = "Test1,\"Test2\"";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
@@ -175,7 +175,7 @@ public class FastCsvReaderTests
     [Fact]
     public void GetString_ShouldThrowExceptionIfIndexIsInvalid()
     {
-        string csv = "a,b";
+        var csv = "a,b";
         using var reader = new FastCsvReader(CreateStream(csv));
 
         Assert.True(reader.Read());
