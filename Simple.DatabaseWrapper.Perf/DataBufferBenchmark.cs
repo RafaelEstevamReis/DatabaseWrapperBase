@@ -1,60 +1,85 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿namespace Simple.DatabaseWrapper.Perf;
+
+using BenchmarkDotNet.Attributes;
 using Simple.DatabaseWrapper;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+
+// 8 Bytes na Stack
+public struct SmallStruct
+{
+    public int V1, V2;
+}
+
+// 128 Bytes na Stack
+public struct LargeStruct
+{
+    public decimal V1, V2, V3, V4, V5, V6, V7, V8;
+}
+
+// 8 Bytes de ponteiro + 24 Bytes no Heap (Object Header + 2 ints)
+public class SmallClass
+{
+    public int V1, V2;
+}
+
+// 8 Bytes de ponteiro + 144 Bytes no Heap (Object Header + 8 decimais)
+public class LargeClass
+{
+    public decimal V1, V2, V3, V4, V5, V6, V7, V8;
+}
+
+// --- BENCHMARK ---
 
 [MemoryDiagnoser]
-public class DataBufferBenchmark
+public class DataBufferTypeBenchmark
 {
-    private const int TotalItems = 500_000; // Meio milhão de itens por teste
-    private const int BatchSize = 10_000;   // Flush a cada 10.000 itens
+    private const int TotalItems = 1_000_000;
+    private const int BatchSize = 10_000;
 
-    // Simula o tempo que o SQLite ou uma API leva para processar o lote (I/O Bound)
-    // O SpinWait simula carga sem colocar a thread para dormir (o que estragaria o benchmark)
-    private readonly Action<IEnumerable<int>> _mockConsumer = batch =>
-    {
-        Thread.SpinWait(100_000);
-    };
+    // Callbacks vazios para isolarmos APENAS o custo da Memória/CPU no Add e no Buffer
+    private readonly Action<IEnumerable<SmallStruct>> _consumeSmallStruct = b => { };
+    private readonly Action<IEnumerable<LargeStruct>> _consumeLargeStruct = b => { };
+    private readonly Action<IEnumerable<SmallClass>> _consumeSmallClass = b => { };
+    private readonly Action<IEnumerable<LargeClass>> _consumeLargeClass = b => { };
 
-    [Benchmark(Baseline = true, Description = "Legacy - Single Thread")]
-    public void Legacy_SingleThread()
+    [Benchmark(Description = "Struct Pequena (8 bytes)")]
+    public void Add_SmallStruct()
     {
-        using var buffer = new DataBuffer_Legacy<int>(BatchSize, _mockConsumer);
+        using var buffer = new DataBuffer<SmallStruct>(BatchSize, _consumeSmallStruct);
         for (int i = 0; i < TotalItems; i++)
         {
-            buffer.Add(i);
+            buffer.Add(new SmallStruct { V1 = i, V2 = i });
         }
     }
 
-    [Benchmark(Description = "New - Single Thread")]
-    public void New_SingleThread()
+    [Benchmark(Description = "Struct Grande (128 bytes)")]
+    public void Add_LargeStruct()
     {
-        using var buffer = new DataBuffer<int>(BatchSize, _mockConsumer);
+        using var buffer = new DataBuffer<LargeStruct>(BatchSize, _consumeLargeStruct);
         for (int i = 0; i < TotalItems; i++)
         {
-            buffer.Add(i);
+            buffer.Add(new LargeStruct { V1 = i, V2 = i, V3 = i, V4 = i, V5 = i, V6 = i, V7 = i, V8 = i });
         }
     }
 
-    [Benchmark(Description = "Legacy - Multi Thread")]
-    public void Legacy_MultiThread()
+    [Benchmark(Description = "Class Pequena")]
+    public void Add_SmallClass()
     {
-        using var buffer = new DataBuffer_Legacy<int>(BatchSize, _mockConsumer);
-        Parallel.For(0, TotalItems, i =>
+        using var buffer = new DataBuffer<SmallClass>(BatchSize, _consumeSmallClass);
+        for (int i = 0; i < TotalItems; i++)
         {
-            buffer.Add(i);
-        });
+            buffer.Add(new SmallClass { V1 = i, V2 = i });
+        }
     }
 
-    [Benchmark(Description = "New - Multi Thread")]
-    public void New_MultiThread()
+    [Benchmark(Description = "Class Grande")]
+    public void Add_LargeClass()
     {
-        using var buffer = new DataBuffer<int>(BatchSize, _mockConsumer);
-        Parallel.For(0, TotalItems, i =>
+        using var buffer = new DataBuffer<LargeClass>(BatchSize, _consumeLargeClass);
+        for (int i = 0; i < TotalItems; i++)
         {
-            buffer.Add(i);
-        });
+            buffer.Add(new LargeClass { V1 = i, V2 = i, V3 = i, V4 = i, V5 = i, V6 = i, V7 = i, V8 = i });
+        }
     }
 }
