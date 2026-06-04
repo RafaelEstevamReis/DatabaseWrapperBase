@@ -18,6 +18,9 @@ namespace Simple.DatabaseWrapper.Helpers
             if (typeT.IsPrimitive) return true;
             if (typeT == typeof(byte[])) return true;
             if (typeT == typeof(string)) return true;
+#if NET6_0_OR_GREATER
+            if (typeT == typeof(ReadOnlySpan<char>)) return true;
+#endif
             if (typeT == typeof(decimal)) return true;
             if (typeT == typeof(DateTime)) return true;
             if (typeT == typeof(TimeSpan)) return true;
@@ -41,7 +44,6 @@ namespace Simple.DatabaseWrapper.Helpers
         /// Guid is read as System.Guid
         /// </summary>
         public static object ReadParamValue(TypeItemInfo info, object parameters)
-            // reverts #25ff772
             => ReadParamValue(info, parameters, false);
 
         /// <summary>

@@ -19,6 +19,7 @@ public class CheckIfSimpleTypeTests
     [InlineData(typeof(ushort))]
     [InlineData(typeof(float))]
     [InlineData(typeof(double))]
+    [InlineData(typeof(ReadOnlySpan<char>))]
     public void CheckIfSimpleType_Primitive(Type t)
     {
         Assert.True(TypeHelper.CheckIfSimpleType(t));

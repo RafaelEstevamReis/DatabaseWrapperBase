@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Simple.DatabaseWrapper.TypeReader;
+using System;
 using System.Data.Common;
 using System.Drawing;
-using Microsoft.VisualBasic;
-using Simple.DatabaseWrapper.TypeReader;
 
 namespace Simple.DatabaseWrapper.Helpers
 {
