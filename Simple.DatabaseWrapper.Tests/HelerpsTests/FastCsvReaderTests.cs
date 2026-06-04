@@ -57,6 +57,7 @@ public class FastCsvReaderTests
         Assert.Equal("1", reader.GetString(0));
         Assert.Equal("Doe, John", reader.GetString(1)); // External quotes must be stripped
         Assert.Equal("30", reader.GetString(2));
+        Assert.False(reader.HasScapedQuotes);
     }
 
     [Fact]
@@ -72,6 +73,7 @@ public class FastCsvReaderTests
 
         // Double quotes ("") must be converted to single quotes (") in GetString
         Assert.Equal("John \"The Boss\" Doe", reader.GetString(1));
+        Assert.True(reader.HasScapedQuotes);
     }
 
     [Fact]

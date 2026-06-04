@@ -2,6 +2,7 @@
 namespace Simple.DatabaseWrapper.Parsers;
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,8 +15,8 @@ using System.Text;
 public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', char quote = '"') : IDisposable
 {
     private readonly StreamReader _reader = reader ?? throw new ArgumentNullException(nameof(reader));
-    private readonly char _quote = quote;
     private readonly char _delimiter = delimiter;
+    private readonly char _quote = quote;
 
     private char[] _buffer = new char[65536];
     private char[] _unescapeBuffer = new char[1024];
@@ -28,6 +29,10 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
     /// Current row field count
     /// </summary>
     public int FieldCount { get; private set; }
+    /// <summary>
+    /// If current fields have scaped quotes
+    /// </summary>
+    public bool HasScapedQuotes { get; private set; }
 
     /// <summary>
     /// Reads next row
@@ -36,6 +41,8 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
     public bool Read()
     {
         FieldCount = 0;
+        HasScapedQuotes = false;
+
         var inQuote = false;
         var rowStart = _bufferPos;
         var fieldStart = _bufferPos;
@@ -93,6 +100,7 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
                     if (_bufferPos + 1 < _bufferLength && _buffer[_bufferPos + 1] == _quote)
                     {
                         _bufferPos++;
+                        HasScapedQuotes = true;
                     }
                     else
                     {
@@ -162,35 +170,22 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
 
         if (span.IsEmpty) return string.Empty;
 
-        bool hasEscaped = false;
-        for (int i = 0; i < span.Length - 1; i++)
-        {
-            if (span[i] == _quote && span[i + 1] == _quote)
-            {
-                hasEscaped = true;
-                break;
-            }
-        }
-
-        if (!hasEscaped)
+        if (!HasScapedQuotes)
         {
             return span.ToString();
         }
 
-        // Checks buffer len
         if (_unescapeBuffer.Length < span.Length)
         {
             Array.Resize(ref _unescapeBuffer, span.Length);
         }
 
-        // Copy
         int finalLength = 0;
         for (int i = 0; i < span.Length; i++)
         {
             char c = span[i];
             _unescapeBuffer[finalLength++] = c;
 
-            // Se for uma aspa e a próxima também for, pula a próxima
             if (c == _quote && i < span.Length - 1 && span[i + 1] == _quote)
             {
                 i++;
@@ -223,7 +218,7 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
     /// Caution: Row string[] is reused internally, do not store
     /// </summary>
     /// <exception cref="ArgumentNullException">Row Action should be defined</exception>
-    public static void ParseCsvZippedFile(string zipFile, Action<string, string[]> onFileRowRead, Func<string, bool> fullNameFilter, char delimiter = ',', char quote = '"', Encoding encoding = null)
+    public static void ParseCsvZippedFile(string zipFile, Action<string, string[]> onFileRowRead, Func<string, bool> fullNameFilter = null, char delimiter = ',', char quote = '"', Encoding encoding = null)
     {
         if (onFileRowRead == null)
         {
