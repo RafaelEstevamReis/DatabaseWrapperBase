@@ -91,50 +91,60 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
                 _bufferLength = _bufferPos + read;
             }
 
-            var c = _buffer[_bufferPos];
+            char[] buf = _buffer;
+            int pos = _bufferPos;
+            int len = _bufferLength;
 
-            if (inQuote)
+            while (pos < len)
             {
-                if (c == _quote)
-                {
-                    if (_bufferPos + 1 < _bufferLength && _buffer[_bufferPos + 1] == _quote)
-                    {
-                        _bufferPos++;
-                        HasScapedQuotes = true;
-                    }
-                    else
-                    {
-                        inQuote = false;
-                    }
-                }
-            }
-            else
-            {
-                if (c == _quote)
-                {
-                    inQuote = true;
-                }
-                else if (c == _delimiter)
-                {
-                    AddColumn(fieldStart, _bufferPos - fieldStart);
-                    fieldStart = _bufferPos + 1;
-                }
-                else if (c == '\n')
-                {
-                    // Windows '\r'
-                    var end = _bufferPos;
-                    if (end > fieldStart && _buffer[end - 1] == '\r')
-                    {
-                        end--;
-                    }
+                var c = buf[pos];
 
-                    AddColumn(fieldStart, end - fieldStart);
-                    _bufferPos++;
-                    return true;
+                if (inQuote)
+                {
+                    if (c == _quote)
+                    {
+                        if (pos + 1 < len && buf[pos + 1] == _quote)
+                        {
+                            pos++;
+                            HasScapedQuotes = true;
+                        }
+                        else
+                        {
+                            inQuote = false;
+                        }
+                    }
                 }
+                else
+                {
+                    if (c == _quote)
+                    {
+                        inQuote = true;
+                    }
+                    else if (c == _delimiter)
+                    {
+                        AddColumn(fieldStart, pos - fieldStart);
+                        fieldStart = pos + 1;
+                    }
+                    else if (c == '\n')
+                    {
+                        // Windows '\r'
+                        var end = pos;
+                        if (end > fieldStart && buf[end - 1] == '\r')
+                        {
+                            end--;
+                        }
+
+                        AddColumn(fieldStart, end - fieldStart);
+
+                        _bufferPos = pos + 1;
+                        return true;
+                    }
+                }
+
+                pos++;
             }
 
-            _bufferPos++;
+            _bufferPos = pos;
         }
     }
 
