@@ -195,6 +195,62 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
         return new string(_unescapeBuffer, 0, finalLength);
     }
 
+    /// <summary>
+    /// Get column value as exact DateTime
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public DateTime GetDateTime(int colIndex, params string[] formats)
+    {
+        var span = GetSpan(colIndex);
+        return DateTime.ParseExact(span, formats, CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// Get column value as double
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public double GetDouble(int colIndex, IFormatProvider provider = null)
+    {
+        var span = GetSpan(colIndex);
+        return double.Parse(span, provider: provider);
+    }
+
+    /// <summary>
+    /// Get column value as decimal
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public decimal GetDecimal(int colIndex, IFormatProvider provider = null)
+    {
+        var span = GetSpan(colIndex);
+        return decimal.Parse(span, provider: provider);
+    }
+
+    /// <summary>
+    /// Get column value as int
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int GetInt(int colIndex, IFormatProvider provider = null)
+    {
+        var span = GetSpan(colIndex);
+        return int.Parse(span, provider: provider);
+    }
+
+    /// <summary>
+    /// Get column value as Boolean, accpets as true (case insensitive): 1, t, true, y, s 
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool GetBoolean(int colIndex)
+    {
+        var span = GetSpan(colIndex);
+
+        if (span.Length == 1)
+        {
+            return span[0] == '1' || span[0] == 'T' || span[0] == 't' || span[0] == 'y' || span[0] == 's';
+        }
+
+        return span.Equals("true".AsSpan(), StringComparison.OrdinalIgnoreCase);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AddColumn(int offset, int length)
     {
