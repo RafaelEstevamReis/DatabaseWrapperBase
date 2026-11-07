@@ -7,6 +7,9 @@ namespace Simple.DatabaseWrapper.Helpers
 {
     public class TypeMapper
     {
+        private static readonly Type TypeOfLong = typeof(long);
+        private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         public static T MapObject<T>(string[] colNames, DbDataReader reader, ReaderCachedCollection cachedCollection)
         {
             var info = cachedCollection.GetInfo<T>();
@@ -47,7 +50,19 @@ namespace Simple.DatabaseWrapper.Helpers
                 else if (type == typeof(long) || type == typeof(long?)) objVal = reader.GetInt64(ColumnIndex);
                 else if (type == typeof(ulong) || type == typeof(ulong?)) objVal = Convert.ToUInt64(reader.GetValue(ColumnIndex));
                 else if (type == typeof(bool) || type == typeof(bool?)) objVal = reader.GetBoolean(ColumnIndex);
-                else if (type == typeof(DateTime) || type == typeof(DateTime?)) objVal = reader.GetDateTime(ColumnIndex);
+                else if (type == typeof(DateTime) || type == typeof(DateTime?))
+                {
+                    var fieldType = reader.GetFieldType(ColumnIndex);
+
+                    if (fieldType == TypeOfLong)
+                    {
+                        objVal = UnixEpoch.AddMilliseconds(reader.GetInt64(ColumnIndex));
+                    }
+                    else
+                    {
+                        objVal = reader.GetDateTime(ColumnIndex);
+                    }
+                }
                 else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?)) objVal = TimeSpan.FromTicks(reader.GetInt64(ColumnIndex));
                 else if (type == typeof(byte[])) objVal = (byte[])reader.GetValue(ColumnIndex);
                 else if (type == typeof(Guid) || type == typeof(Guid?)) objVal = reader.GetGuid(ColumnIndex);
