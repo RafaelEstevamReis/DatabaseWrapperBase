@@ -255,7 +255,10 @@ public sealed class FastCsvReader(StreamReader reader, char delimiter = ',', cha
 
         if (span.Length == 1)
         {
-            return span[0] == '1' || span[0] == 'T' || span[0] == 't' || span[0] == 'y' || span[0] == 's';
+            return span[0] == '1' 
+                || span[0] == 'T' || span[0] == 't'
+                || span[0] == 'Y' || span[0] == 'y'
+                || span[0] == 'S' || span[0] == 's';
         }
 
         return span.Equals("true".AsSpan(), StringComparison.OrdinalIgnoreCase);
